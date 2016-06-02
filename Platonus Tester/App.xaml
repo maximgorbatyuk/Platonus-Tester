@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:Platonus_Tester"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <BitmapImage x:Key="TuranLogo" UriSource="../Media/logo.png" />
     </Application.Resources>
 </Application>

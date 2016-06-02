@@ -5,8 +5,43 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Platonus_Tester"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="521.053" Width="777.632" Icon="icon.ico">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Menu x:Name="menu" Height="29" VerticalAlignment="Top" FontSize="14">
+            <MenuItem Header="Программа" VerticalAlignment="Center">
+                <MenuItem Header="Настройки"/>
+                <MenuItem Header="Цветовая схема" Click="ChangeColorSchemeClick"/>
+            </MenuItem>
+            <MenuItem Header="Тестирование">
+                <MenuItem Header="Загрузить файл"/>
+                <MenuItem Header="Начать заново"/>
+                <MenuItem Header="Закончить"/>
+            </MenuItem>
+            <MenuItem Header="О программе"/>
+        </Menu>
+        <StatusBar Height="35" VerticalAlignment="Bottom">
+            <Label x:Name="swearLabel" Content="Swear Mode"/>
+        </StatusBar>
+        <ProgressBar Margin="0,0,10,8" Height="18" VerticalAlignment="Bottom" Value="45" HorizontalAlignment="Right" Width="283"/>
+        <Grid x:Name="startGrid" Margin="10,34,10,40">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="118"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="196"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="StartButton" Content="Button" Margin="10,8,10,62" FontSize="20" Padding="15,1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsDefault="True" Grid.Column="1" Grid.Row="1"/>
+            <Button x:Name="SettingsButton" Content="Button" Margin="10,0,10,9" FontSize="20" Padding="15,1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="48" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="1"/>
+            <TextBox x:Name="textBox" Height="41" Margin="10,10,10,0" TextWrapping="Wrap" Text="Welcome Text" VerticalAlignment="Top" Grid.ColumnSpan="3" FontFamily="Segoe UI Semibold" FontSize="22"/>
+            <TextBlock x:Name="textBlock" Margin="10,56,10,0" TextWrapping="Wrap" Text="TextBlock" Grid.ColumnSpan="3" Height="132" VerticalAlignment="Top"/>
+            <TextBlock x:Name="textBlock1" Margin="10,193,10,10" TextWrapping="Wrap" Text="Information about processes" Grid.ColumnSpan="3" FontSize="18" FontFamily="Segoe UI Semibold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <Image x:Name="image" Margin="0,0,10,9" Grid.Row="1" Grid.Column="2" Stretch="Fill" Source="logo.png" HorizontalAlignment="Right" Width="257" Height="109" VerticalAlignment="Bottom"/>
+        </Grid>
     </Grid>
 </Window>

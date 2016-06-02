@@ -24,5 +24,11 @@ namespace Platonus_Tester
         {
             InitializeComponent();
         }
+
+        private void ChangeColorSchemeClick(object sender, RoutedEventArgs e)
+        {
+            //throw new NotImplementedException();
+            startGrid.Visibility = startGrid.IsVisible ? Visibility.Hidden : Visibility.Visible;
+        }
     }
 }
