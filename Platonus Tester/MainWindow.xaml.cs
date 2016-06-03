@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using Microsoft.Win32;
 using Platonus_Tester.Comments;
 using Platonus_Tester.Controller;
@@ -39,6 +40,7 @@ namespace Platonus_Tester
         //-------------------------
         private Settings _settings;
         private Comment _goodComment, _badComment;
+        private SourceFile _sourcefile = null;
 
         private readonly List<RadioButton> _radioButtonsList;
 
@@ -94,13 +96,9 @@ namespace Platonus_Tester
             return;
         }
 
-        private async void OnSourceLoaded(object sender, SourceFileLoadedArgs e)
+        private async void ProcessSourceFile(SourceFile source)
         {
-            //throw new NotImplementedException();
-            var sourceFile = e.ProcessingResult;
-            if (sourceFile.SourceText == null) return;
-
-            _questionManager.SetSourceList(sourceFile);
+            _questionManager.SetSourceList(source);
             if (_settings.QuestionsLimit)
             {
                 _questionManager.SetQuestionLimit(25);
@@ -129,7 +127,7 @@ namespace Platonus_Tester
             }
             //--------------------------
             UInterfaceHelper.SetText(NextButton, Const.NextQuestion);
-            UInterfaceHelper.SetText(CheckButton, Const.StartTesting);
+            UInterfaceHelper.SetText(CheckButton, Const.CheckQuestion);
             UInterfaceHelper.SetProgressValue(progressBar, 100);
 
             var errors = _questionManager.Errors;
@@ -143,25 +141,36 @@ namespace Platonus_Tester
             }
         }
 
+        private async void OnSourceLoaded(object sender, SourceFileLoadedArgs e)
+        {
+            //throw new NotImplementedException();
+            _sourcefile = e.ProcessingResult;
+            if (_sourcefile.SourceText == null) return;
+            ProcessSourceFile(_sourcefile);
+            
+        }
+
 
         private void LoadToLabels(Question test)
         {
             if (test == null) return;
-            UInterfaceHelper.SetText(questionTextBlock, test.AskQuestion);
+            questionTextBlock.Text = test.AskQuestion;
 
             if (test.Picture != null)
             {
-                UInterfaceHelper.SetImage(image1, test.Picture);
+                image1.Source = UInterfaceHelper.GetImageSource(test.Picture);
             }
-            UInterfaceHelper.SetVisible(image1, test.Picture != null);
+            image1.Visibility = test.Picture != null ? Visibility.Visible : Visibility.Hidden;
 
-            var hash = test.AnswerList;
+            var hash = new List<string>(0);
+            hash.AddRange(test.AnswerList);
             //-----------------
             for (var i = 0; i < _radioButtonsList.Count; i++)
             {
                 var rb = _radioButtonsList[i];
                 rb.Background = new SolidColorBrush(Const.LigthBackgroundColor);
-                UInterfaceHelper.SetText(rb, GetRandomItem(hash, i));
+
+                rb.Content = GetRandomItem(hash, i);
                 hash.Remove((string) rb.Content);
             }
             //---------------------------
@@ -231,8 +240,8 @@ namespace Platonus_Tester
             StartGrid.Visibility = Visibility.Visible;
             if (_fileName == "") return;
 
-            UInterfaceHelper.SetEnable(StartButton, false);
-            UInterfaceHelper.SetProgressValue(progressBar, 0);
+            StartButton.IsEnabled = false;
+            progressBar.Value = 0;
             _sourceController.ProcessSourceFileAsync(_fileName);
             swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
         }
@@ -262,8 +271,8 @@ namespace Platonus_Tester
                 serviceTextBox.Text = Const.WrongFilename;
                 return;
             }
-
-            UInterfaceHelper.SetText(serviceTextBox, Const.FileProcessing);
+            serviceTextBox.Text = Const.FileProcessing;
+            //UInterfaceHelper.SetText(serviceTextBox, Const.FileProcessing);
             LoadSettings();
         }
 

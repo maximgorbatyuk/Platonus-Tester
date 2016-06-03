@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ using System.Windows;
 using Novacode;
 using Platonus_Tester.CustomArgs;
 using Platonus_Tester.Model;
+using Container = Novacode.Container;
 using Image = System.Drawing.Image;
 
 namespace Platonus_Tester.Controller
@@ -20,28 +22,50 @@ namespace Platonus_Tester.Controller
         private string _fileName;
         private Thread _thread;
 
-        public async Task<SourceFile> ProcessSourceFileAsync(string fileName)
+        public void ProcessSourceFileAsync(string fileName)
         {
             _fileName = fileName;
+
+            var worker = new BackgroundWorker();
+            worker.DoWork += worker_DoWork;
+            worker.RunWorkerCompleted += worker_RunWorkerCompleted;
+            worker.RunWorkerAsync(fileName);
+
+
             //_thread = new Thread(StartProcessing);
             // _thread.Start();
         }
 
-        private void StartProcessing()
+        private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            var result = (SourceFile) e.Result;
+            DefineResult(result);
+            // throw new NotImplementedException();
+        }
+
+        private void worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            _fileName = (string) e.Argument;
+            SourceFile file = null;
             if (_fileName.IndexOf(".txt", StringComparison.Ordinal) > -1)
             {
-                //return GetTXT(fileName);
-                DefineResult(GetTXT(_fileName));
+                file =  GetTXT(_fileName);
+                //DefineResult(GetTXT(_fileName));
             }
 
             if (_fileName.IndexOf(".docx", StringComparison.Ordinal) > -1 ||
                 _fileName.IndexOf(".doc", StringComparison.Ordinal) > -1
                 )
             {
-                //return GetDocXText(fileName);
-                DefineResult(GetDocXText(_fileName));
+                file = GetDocXText(_fileName);
+                //DefineResult(GetDocXText(_fileName));
             }
+            e.Result = file;
+        }
+
+        private void StartProcessing()
+        {
+            
         }
 
         private SourceFile GetTXT(string filename)
@@ -148,6 +172,7 @@ namespace Platonus_Tester.Controller
         private void DefineResult(SourceFile text)
         {
             if (OnLoadComleted == null) return;
+            //_thread.Abort();
             //_thread.Abort();
             var args = new SourceFileLoadedArgs(text);
             OnLoadComleted(this, args);

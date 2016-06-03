@@ -47,5 +47,7 @@ namespace Platonus_Tester.Helper
 
         public static readonly Color CorrectColor = Color.FromArgb(255, 144, 232, 121);
         public static readonly Color IncorrectColor = Color.FromArgb(255, 233, 107, 107);
+        public static readonly string CheckThis = "Проверить";
+        public static readonly string ProcessingProblem = $"Возникли проблемы с обработкой вопросов";
     }
 }
