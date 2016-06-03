@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,7 +29,37 @@ namespace Platonus_Tester
         private void ChangeColorSchemeClick(object sender, RoutedEventArgs e)
         {
             //throw new NotImplementedException();
-            startGrid.Visibility = startGrid.IsVisible ? Visibility.Hidden : Visibility.Visible;
+            StartGrid.Visibility = StartGrid.IsVisible ? Visibility.Hidden : Visibility.Visible;
+        }
+
+        private void StartGrid_OnDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                textBlock1.Text = "";
+                var files = (string[]) e.Data.GetData(DataFormats.FileDrop);
+                foreach (var file in files)
+                {
+                    // textBlock1.Text += $"{file} \n";
+
+                }  
+            }
+            
+            
+            ;
+            // throw new NotImplementedException();
+        }
+
+        private void StartGrid_OnDragOver(object sender, DragEventArgs e)
+        {
+            e.Effects = DragDropEffects.Move;
+            e.Handled = true;
+            // throw new NotImplementedException();
+        }
+
+        private void StartButton_Click(object sender, RoutedEventArgs e)
+        {
+            StartGrid.Visibility = Visibility.Hidden;
         }
     }
 }
