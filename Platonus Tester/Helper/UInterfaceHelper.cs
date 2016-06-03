@@ -110,7 +110,7 @@ namespace Platonus_Tester.Helper
                 new Action<int>(s => control.Value = s), value);
         }
 
-        public static void PaintBackColor(Grid sender, bool rigth)
+        public static void PaintBackColor(ContentControl sender, bool rigth)
         {
             sender.Background = new SolidColorBrush(rigth ? Const.CorrectColor : Const.IncorrectColor );
         }

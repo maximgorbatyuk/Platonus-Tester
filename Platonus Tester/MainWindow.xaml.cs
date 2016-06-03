@@ -43,7 +43,6 @@ namespace Platonus_Tester
         private SourceFile _sourcefile = null;
 
         private readonly List<RadioButton> _radioButtonsList;
-        private readonly List<Grid> _gridList;
 
 
         public MainWindow()
@@ -57,14 +56,6 @@ namespace Platonus_Tester
                 RBVariant3,
                 RBVariant4,
                 RBVariant5,
-            };
-            _gridList = new List<Grid>
-            {
-                RB1Grid,
-                RB2Grid,
-                RB3Grid,
-                RB4Grid,
-                RB5Grid,
             };
         }
 
@@ -116,25 +107,28 @@ namespace Platonus_Tester
             _currentQuestion = _questionManager.GetNext();
             _count += 1;
             LoadToLabels(_currentQuestion);
-            informationLabel.Content = $"Осталось вопросов: {_questionManager.GetCount()}";
+            UInterfaceHelper.SetText(
+                informationLabel, $"Осталось вопросов: {_questionManager.GetCount()}");
 
-            swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
+            UInterfaceHelper.SetText(
+                swearLabel, _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled);
             //
             var count = _questionManager.GetCount() + 1;
             if (count > 0)
             {
-                serviceTextBox.Text = $"Файл загружен. Нажмите \"Начать\". Вопросов {count}";
+                UInterfaceHelper.SetText(serviceTextBox, $"Файл загружен. Нажмите \"Начать\". Вопросов {count}");
                 _loadedFile = true;
-                StartButton.IsEnabled = true;
+                UInterfaceHelper.SetEnable(StartButton, true);
             }
             else
             {
-                serviceTextBox.Text = Const.ProcessingProblem;
+                UInterfaceHelper.SetText(serviceTextBox,
+                    $"Возникли проблемы с обработкой вопросов");
             }
             //--------------------------
-            NextButton.Content = Const.NextQuestion;
-            CheckButton.Content = Const.CheckQuestion;
-            progressBar.Value = 100;
+            UInterfaceHelper.SetText(NextButton, Const.NextQuestion);
+            UInterfaceHelper.SetText(CheckButton, Const.CheckQuestion);
+            UInterfaceHelper.SetProgressValue(progressBar, 100);
 
             var errors = _questionManager.Errors;
             if (errors != null)
@@ -174,8 +168,8 @@ namespace Platonus_Tester
             for (var i = 0; i < _radioButtonsList.Count; i++)
             {
                 var rb = _radioButtonsList[i];
-                // rb.Background = new SolidColorBrush(Const.LigthBackgroundColor);
-                _gridList[i].Background = new SolidColorBrush(Const.LigthBackgroundColor);
+                rb.Background = new SolidColorBrush(Const.LigthBackgroundColor);
+
                 rb.Content = GetRandomItem(hash, i);
                 hash.Remove((string) rb.Content);
             }
@@ -330,10 +324,6 @@ namespace Platonus_Tester
                     answer.ChosenAnswer = (string) rb.Content;
                 }
             }
-            if (answer.ChosenAnswer == answer.CorrectAnswer)
-            {
-                answer.IsItCorrect = true;
-            }
             _answered.Add(answer);
         }
 
@@ -358,16 +348,15 @@ namespace Platonus_Tester
         {
             if (_currentQuestion == null) return;
 
-            for (var index = 0; index < _radioButtonsList.Count; index++)
+            foreach (var rb in _radioButtonsList)
             {
-                var rb = _radioButtonsList[index];
                 if ((string) rb.Content == _currentQuestion.CorrectAnswer)
                 {
-                    UInterfaceHelper.PaintBackColor(_gridList[index], true);
+                    UInterfaceHelper.PaintBackColor(rb, true);
                 }
                 else if (rb.IsChecked ?? false)
                 {
-                    UInterfaceHelper.PaintBackColor(_gridList[index], false);
+                    UInterfaceHelper.PaintBackColor(rb, false);
                 }
             }
         }
@@ -387,7 +376,6 @@ namespace Platonus_Tester
                 _currentQuestion = _questionManager.GetNext();
                 LoadToLabels(_currentQuestion);
                 informationLabel.Content = $"Осталось вопросов: {_questionManager.GetCount() - _answered.Count}";
-
                 if (_answered.Count == _questionManager.GetCount())
                 {
                     NextButton.Content = Const.ShowResult;
@@ -398,8 +386,8 @@ namespace Platonus_Tester
         private void StartAgainMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             if (_fileName == "") return;
-            informationLabel.Content = "";
-            serviceTextBox.Text = Const.FileProcessing;
+            UInterfaceHelper.SetText(informationLabel, "");
+            UInterfaceHelper.SetText(serviceTextBox, Const.FileProcessing);
             LoadSettings();
             // throw new NotImplementedException();
         }
