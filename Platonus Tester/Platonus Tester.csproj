@@ -38,6 +38,10 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DocX, Version=1.0.0.22, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Test-Unit-Project\SessionTestUnit\bin\Debug\DocX.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -59,6 +63,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="SettingsForm.xaml.cs">
+      <DependentUpon>SettingsForm.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -67,12 +74,33 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Comments\Comment.cs" />
+    <Compile Include="Comments\Swear.cs" />
+    <Compile Include="Controller\DownloadController.cs" />
+    <Compile Include="Controller\QuestionController.cs" />
+    <Compile Include="Controller\SettingsController.cs" />
+    <Compile Include="Controller\SourceController.cs" />
+    <Compile Include="CustomArgs\SourceFileLoadedArgs.cs" />
+    <Compile Include="Helper\Const.cs" />
+    <Compile Include="Helper\QuestionProcessor.cs" />
+    <Compile Include="Helper\SwearHashProcessor.cs" />
+    <Compile Include="Helper\TextBlockFactory.cs" />
+    <Compile Include="Helper\UInterfaceHelper.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="SettingsForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\AnsweredQuestion.cs" />
+    <Compile Include="Model\Question.cs" />
+    <Compile Include="Helper\Settings.cs" />
+    <Compile Include="Model\SourceFile.cs" />
+    <Compile Include="Model\TestQuestion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -103,10 +131,7 @@
     <Resource Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controller\" />
-    <Folder Include="Helper\" />
     <Folder Include="Media\" />
-    <Folder Include="Model\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="logo.png" />
