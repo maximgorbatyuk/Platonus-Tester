@@ -38,7 +38,7 @@ namespace Platonus_Tester.Helper
         {
             var visibiliy = state ? Visibility.Visible : Visibility.Hidden;
             control.Dispatcher.Invoke(
-                new Action<Visibility>(s => control.Visibility = s), visibiliy);
+                new Action<bool>(s => control.Visibility = visibiliy), visibiliy);
         }
 
         public static void SetImage(Image control, System.Drawing.Image image)

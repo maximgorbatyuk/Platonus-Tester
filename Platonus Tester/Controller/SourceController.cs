@@ -23,30 +23,25 @@ namespace Platonus_Tester.Controller
         public async Task<SourceFile> ProcessSourceFileAsync(string fileName)
         {
             _fileName = fileName;
-            SourceFile result = null;
+            //_thread = new Thread(StartProcessing);
+            // _thread.Start();
+        }
+
+        private void StartProcessing()
+        {
             if (_fileName.IndexOf(".txt", StringComparison.Ordinal) > -1)
             {
-                result = GetTXT(fileName);
-                //DefineResult(GetTXT(_fileName));
+                //return GetTXT(fileName);
+                DefineResult(GetTXT(_fileName));
             }
 
             if (_fileName.IndexOf(".docx", StringComparison.Ordinal) > -1 ||
                 _fileName.IndexOf(".doc", StringComparison.Ordinal) > -1
                 )
             {
-                result = GetDocXText(fileName);
-                // DefineResult(GetDocXText(_fileName));
+                //return GetDocXText(fileName);
+                DefineResult(GetDocXText(_fileName));
             }
-            await Task.Delay(50);
-
-            //_thread = new Thread(StartProcessing);
-            // _thread.Start();
-            return result;
-        }
-
-        private void StartProcessing()
-        {
-            
         }
 
         private SourceFile GetTXT(string filename)
