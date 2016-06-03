@@ -26,16 +26,25 @@
                 <ColumnDefinition Width="73*"/>
                 <ColumnDefinition Width="73*"/>
             </Grid.ColumnDefinitions>
-            <RadioButton x:Name="RBVariant2" Content="Variant 2" Margin="10" Grid.Row="4" Grid.Column="0"
-                         BorderBrush="#FF403F3F" Background="{x:Null}" FontSize="16"/>
-            <RadioButton x:Name="RBVariant1" Content="Variant 1" Margin="10" Grid.Row="3" BorderBrush="Black" Background="{x:Null}" FontSize="16" Foreground="Black" />
-            <RadioButton x:Name="RBVariant3" Content="Variant 3" Margin="10" Grid.Row="5" BorderBrush="#FF403F3F" Background="{x:Null}" FontSize="16"/>
-            <RadioButton x:Name="RBVariant4" Content="Variant 4" Margin="10" Grid.Row="6" BorderBrush="#FF403F3F" Background="{x:Null}" FontSize="16"/>
-            <RadioButton x:Name="RBVariant5" Content="Variant 5" Margin="10" Grid.Row="7" BorderBrush="#FF403F3F" Background="{x:Null}" FontSize="16"/>
             <TextBlock x:Name="questionTextBlock" Margin="10" TextWrapping="Wrap" Text="TextBlock" FontSize="16" Grid.RowSpan="3"/>
             <Image x:Name="image1" Grid.Column="1" Margin="10" Grid.RowSpan="5" OpacityMask="#FFF1F1F1" Stretch="Fill" Grid.Row="3" Grid.ColumnSpan="2"/>
             <Button x:Name="NextButton" Content="Next" Grid.Column="2" Margin="10" Click="NextButton_Click"/>
             <Button x:Name="CheckButton" Content="Check" Grid.Column="1" Margin="10" Click="CheckButton_Click"/>
+            <Grid Grid.Row="3" Name="RB1Grid" Margin="0,10">
+                <RadioButton x:Name="RBVariant1" Content="Variant 1" BorderBrush="Black" Background="{x:Null}" FontSize="16" Foreground="Black" Margin="10,0" />
+            </Grid>
+            <Grid Grid.Row="4" x:Name="RB2Grid" Margin="0,10">
+                <RadioButton x:Name="RBVariant2" Content="Variant 1" BorderBrush="Black" Background="{x:Null}" FontSize="16" Foreground="Black" Margin="10,0" />
+            </Grid>
+            <Grid Grid.Row="5" x:Name="RB3Grid" Margin="0,10">
+                <RadioButton x:Name="RBVariant3" Content="Variant 1" BorderBrush="Black" Background="{x:Null}" FontSize="16" Foreground="Black" Margin="10,0" />
+            </Grid>
+            <Grid Grid.Row="6" x:Name="RB4Grid" Margin="0,10">
+                <RadioButton x:Name="RBVariant4" Content="Variant 1" BorderBrush="Black" Background="{x:Null}" FontSize="16" Foreground="Black" Margin="10,0" />
+            </Grid>
+            <Grid Grid.Row="7" x:Name="RB5Grid" Margin="0,10">
+                <RadioButton x:Name="RBVariant5" Content="Variant 1" BorderBrush="Black" Background="{x:Null}" FontSize="16" Foreground="Black" Margin="10,0" />
+            </Grid>
         </Grid>
         <Menu x:Name="menu" Height="29" VerticalAlignment="Top" FontSize="14">
             <MenuItem Header="Программа" VerticalAlignment="Center">
@@ -55,7 +64,7 @@
             <Label x:Name="informationLabel" Content="Information"/>
         </StatusBar>
         <ProgressBar x:Name="progressBar" Margin="0,0,10,8" Height="18" VerticalAlignment="Bottom" Value="45" HorizontalAlignment="Right" Width="283"/>
-        <Grid x:Name="StartGrid" Margin="10,34,10,40" AllowDrop="True" DragOver="StartGrid_OnDragOver" Drop="StartGrid_OnDrop" Background="#FFF7F7F7" DragEnter="StartGrid_DragEnter" >
+        <Grid x:Name="StartGrid" Margin="562,421,-542,-347" AllowDrop="True" DragOver="StartGrid_OnDragOver" Drop="StartGrid_OnDrop" Background="#FFF7F7F7" DragEnter="StartGrid_DragEnter" >
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition Height="118"/>
@@ -69,7 +78,7 @@
             <Button x:Name="SettingsButton" Content="Settings" Margin="10,0,10,9" FontSize="20" Padding="15,1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="48" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="1" Click="SettingsButton_Click"/>
             <TextBlock x:Name="textBlock" Margin="10,56,10,0" TextWrapping="Wrap" Text="TextBlock" Grid.ColumnSpan="3" Height="132" VerticalAlignment="Top"/>
             <Image x:Name="image" Margin="0,0,10,9" Grid.Row="1" Grid.Column="2" Stretch="Fill" Source="logo.png" HorizontalAlignment="Right" Width="257" Height="109" VerticalAlignment="Bottom"/>
-            <TextBlock x:Name="serviceTextBox" Margin="10,193,10,10" TextWrapping="Wrap" Text="Information about processes" Grid.ColumnSpan="3" FontSize="18" FontFamily="Segoe UI Semibold" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBlock x:Name="serviceTextBox" Margin="10,193,10,10" TextWrapping="Wrap" Text="Information about processes" Grid.ColumnSpan="3" FontSize="18" FontFamily="Segoe UI Semibold"/>
             <TextBlock x:Name="textBlock1" Margin="10,10,10,0" TextWrapping="Wrap" Text="Welcome Text" VerticalAlignment="Top" Grid.ColumnSpan="3" Height="41" FontSize="22" FontWeight="Bold"/>
         </Grid>
     </Grid>
