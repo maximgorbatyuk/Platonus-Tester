@@ -94,10 +94,8 @@ namespace Platonus_Tester
             return;
         }
 
-        private async void OnSourceLoaded(object sender, SourceFileLoadedArgs e)
+        private async void ProcessSourceFile(SourceFile sourceFile)
         {
-            //throw new NotImplementedException();
-            var sourceFile = e.ProcessingResult;
             if (sourceFile.SourceText == null) return;
 
             _questionManager.SetSourceList(sourceFile);
@@ -141,6 +139,13 @@ namespace Platonus_Tester
             {
                 await StartGettingHashesAsync();
             }
+        }
+
+        private void OnSourceLoaded(object sender, SourceFileLoadedArgs e)
+        {
+            //throw new NotImplementedException();
+            var sourceFile = e.ProcessingResult;
+            ProcessSourceFile(sourceFile);
         }
 
 
@@ -223,18 +228,18 @@ namespace Platonus_Tester
             }
         }
 
-        private void LoadSettings()
+        private async void LoadSettings()
         {
             serviceTextBox.Background = new SolidColorBrush( Const.LigthBackgroundColor );
             _settings = SettingsController.Load();
             _answered = new List<AnsweredQuestion>(0);
             StartGrid.Visibility = Visibility.Visible;
             if (_fileName == "") return;
-
+            swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
             UInterfaceHelper.SetEnable(StartButton, false);
             UInterfaceHelper.SetProgressValue(progressBar, 0);
-            _sourceController.ProcessSourceFileAsync(_fileName);
-            swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
+            var source = await _sourceController.ProcessSourceFileAsync(_fileName);
+            ProcessSourceFile(source);
         }
 
         private void OpenFile(string dragname = null)
