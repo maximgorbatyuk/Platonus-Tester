@@ -47,6 +47,8 @@ namespace Platonus_Tester
 
         public MainWindow()
         {
+            // TODO: Rectangle editing
+
             InitializeComponent();
             Title = Const.ApplicationName;
             _radioButtonsList = new List<RadioButton>
