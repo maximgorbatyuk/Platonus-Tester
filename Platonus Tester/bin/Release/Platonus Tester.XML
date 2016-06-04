@@ -1,0 +1,441 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Platonus Tester</name>
+    </assembly>
+    <members>
+        <member name="T:Platonus_Tester.ErrorWindow">
+            <summary>
+            Логика взаимодействия для ErrorWindow.xaml
+            </summary>
+            <summary>
+            ErrorWindow
+            </summary>
+        </member>
+        <member name="M:Platonus_Tester.ErrorWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.ResultWindow">
+            <summary>
+            Логика взаимодействия для ResultWindow.xaml
+            </summary>
+            <summary>
+            ResultWindow
+            </summary>
+        </member>
+        <member name="M:Platonus_Tester.ResultWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.SettingsForm">
+            <summary>
+            Логика взаимодействия для SettingsForm.xaml
+            </summary>
+            <summary>
+            SettingsForm
+            </summary>
+        </member>
+        <member name="M:Platonus_Tester.SettingsForm.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.App">
+            <summary>
+            Логика взаимодействия для App.xaml
+            </summary>
+            <summary>
+            App
+            </summary>
+        </member>
+        <member name="M:Platonus_Tester.App.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:Platonus_Tester.App.Main">
+            <summary>
+            Application Entry Point.
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.Comments.Comment">
+            <summary>
+            Этот класс является предком для класса ругательств
+            Здесь определены все методы, а так же хэши комментариев
+            В дочернем классе переопределены именно хэши
+            </summary>
+        </member>
+        <member name="M:Platonus_Tester.Comments.Comment.Get(System.Double)">
+            <summary>
+            Функция возвращает рандомный элемент из массива комментариев
+            </summary>
+            <param name="res"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Platonus_Tester.Comments.Comment.InitiateHashes">
+            <summary>
+            Инициализация массивов, которая перезаписывается в дочерних элменетах
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.Comments.Swear">
+            <summary>
+            Класс потомок комментария. Перезаписывается только хэш набор комментариев
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.Controller.DownloadController">
+            <summary>
+            Класс-помощник для загрузки новых комментариев с репозитория на GitHub
+            Операции выполняются асинхронно
+            </summary>
+        </member>
+        <member name="M:Platonus_Tester.Controller.DownloadController.CheckForInternetConnection">
+            <summary>
+            Прежде всего вызывается проверка на соединение
+            отсутствует - значит нет комментариев
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Platonus_Tester.Controller.QuestionController">
+             <summary>
+             Класс для обработки массива готовых тестовых вопросов
+            
+             </summary>
+        </member>
+        <member name="M:Platonus_Tester.Controller.QuestionController.Shuffle">
+            <summary>
+            Перемешение вопросов в массиве.
+            </summary>
+        </member>
+        <member name="M:Platonus_Tester.Controller.QuestionController.GetNext">
+            <summary>
+            Возвращает следующий вопрос. Раньше (до перевода на WPF 04.06.2016) метод удалял
+            возвращаемый вопрос. Сейчас принцип выдачи изменен, так как в планах
+            сделать переход по предыдущим вопросам
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Platonus_Tester.Controller.SettingsController">
+            <summary>
+            Класс для управления настройками. Настройки записываются в XML формате в файл в той же директории
+            </summary>
+        </member>
+        <member name="M:Platonus_Tester.Controller.SettingsController.Load">
+            <summary>
+            Загрузка настроек из файла. Если происходит ошибка, возвращаются станлартные настройки
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Platonus_Tester.Controller.SourceController">
+            <summary>
+            Класс для управления входным файлом. За основу взята библиотека 
+            Novacode.DocX, как бесплатная и легкодоступная. Из проблем библиотеки
+            стоит отметить то, что работает она в одном потоке, и в ней нет функций async / await
+            Это значит, что мне нужно организовать работу в фоне, так как загрузка файла docx/doc
+            Может занимать достаточное для глаза время блокировки UI треда.
+            Например, тест по ИнфБез открывается около 6 секунд
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.Controller.SourceController.SourceFileLoadCompleted">
+            <summary>
+            Здесь я определяю реализацию паттерна Listenter (Observer)
+            Когда заканчивается обработка документа, вызывается событие окончания, 
+            и данные в UI потоке обновляются
+            
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Platonus_Tester.Controller.SourceController.ProcessSourceFileAsync(System.String)">
+            <summary>
+            Инициализация. Здесь же определяю и Background worker
+            Об этой функции узнал недавно (04.06.2016), так как были проблемы с Thread.Start
+            Создание отедльного треда вынудило использовать кучу костылей в обновлении UI компонентов, 
+            Доходило до того, что я и компонент, и переменную для обновления (внутри лямбда функции) 
+            вызывал через Dispatcher
+            Вывод: в WinForm создание треда было проще (или просто мне понятней)
+            </summary>
+            <param name="fileName"></param>
+        </member>
+        <member name="M:Platonus_Tester.Controller.SourceController.GetTXT(System.String)">
+            <summary>
+            Если был передан обыкновенный текстовый файл
+            </summary>
+        </member>
+        <member name="M:Platonus_Tester.Controller.SourceController.GetDocXText(System.String)">
+            <summary>
+            Эта функция берет файл и создает документ-контейнер для него.
+            Это занимает некоторое время, что вынуждает использовать раздельные потоки
+            </summary>
+        </member>
+        <member name="M:Platonus_Tester.Controller.SourceController.ReplaceImages(System.String,Novacode.Container)">
+            <summary>
+            Функция для поиска и замены изображений в документе
+            Пробегаюсь по параграфам и нахожу картинки
+            Картинки имею свое имя. Обычно один параграф и есть одна картинка, что упрощает поиск
+            Чтобы в дальнейшем запомнить положение той или иной картинки, я 
+            Заменяю место в тексте специальным тегом #picture \\name\\
+            В дальнейшем при обработке я ищу эти теги и заменяю картинками по имени
+            </summary>
+            <param name="text"></param>
+            <param name="doc"></param>
+            <returns>Полный текст документа + теги картинок</returns>
+        </member>
+        <member name="M:Platonus_Tester.Controller.SourceController.ReplaceTables(System.String,Novacode.Container)">
+            <summary>
+            Функция для замены таблиц в документе текстовым аналогом 
+            | столбец | столбец |
+            | строка  | строка  |
+            Выравнивание пока не реализовано, но пока и так вариант ответа понятен
+            Каждая ячейка в исходном документе была отдельным параграфом, поэтому я передаю и исходный текст,
+            чтобы заменить эти ошибки на презентабельный вид
+            </summary>
+            <param name="text">текст с картинками</param>
+            <param name="doc">Контейнер документа</param>
+            <returns>Полный текст (с картинками) + Таблицы</returns>
+        </member>
+        <member name="M:Platonus_Tester.Controller.SourceController.DefineResult(Platonus_Tester.Model.SourceFile)">
+            <summary>
+            Событие, создающее возникновения события обработки
+            </summary>
+            <param name="text"></param>
+        </member>
+        <member name="T:Platonus_Tester.CustomArgs.SourceFileLoadedArgs">
+            <summary>
+            Кастомный аргумент-класс, инициализирующийся при окончании обработки файла
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.Helper.Const">
+            <summary>
+            Here I tryed to make an imitation of String resource file
+            This variables a assigned to Control-components contents and titles
+            Also here Color const placed.
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.Helper.QuestionProcessor">
+            <summary>
+            Класс-кор проекта. Обработчик текста вопросов в хэш вопросов-объектов
+            </summary>
+        </member>
+        <member name="M:Platonus_Tester.Helper.QuestionProcessor.GetQuestionList(Platonus_Tester.Model.SourceFile)">
+            <summary>
+            Функция-инициализатор обработки. Определяю количество вхождений слова question в тегах 
+            для того, чтобы определить количество итераций. 
+            </summary>
+            <param name="file">Объект содержит текст и картинки</param>
+            <returns>Массив тестовых вопросов</returns>
+        </member>
+        <member name="M:Platonus_Tester.Helper.QuestionProcessor.ProcessText(System.String)">
+            <summary>
+            Здесь планирую сделать замену TAMOS формата в Platonus формат
+            </summary>
+            <param name="text"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Platonus_Tester.Helper.QuestionProcessor.GetQuestion(System.String)">
+            <summary>
+            Функция, возвращающая тестовый вопрос
+            </summary>
+            <param name="text"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Platonus_Tester.Helper.QuestionProcessor.RemovePictureText(System.String)">
+            <summary>
+            Поиск и удаление всех вхождений тегов picture
+            </summary>
+            <param name="text">Исходный текст для форматирования</param>
+            <returns>Текст без тегов картинок</returns>
+        </member>
+        <member name="M:Platonus_Tester.Helper.QuestionProcessor.GetWordCount(System.String,System.String)">
+            <summary>
+            Функция - вычислитель количество вхождений слова в тексте
+            </summary>
+            <param name="word">Искомое слово</param>
+            <param name="source">Текст, в котором ищется слово</param>
+            <returns>Количество вхождений</returns>
+        </member>
+        <member name="M:Platonus_Tester.Helper.QuestionProcessor.FindImageByName(System.String)">
+            <summary>
+            Поиск и возврат картинки по названию
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Platonus_Tester.Helper.SwearHashProcessor">
+            <summary>
+            Обработчик скачанного текста с репозитория в массив строк
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.Helper.UInterfaceHelper">
+            <summary>
+            Класс для вспомогательных функций обработки компонентов формы, чтобы сделать код в UI классах чище
+            До версии 2.0 была необходимость в использовании Dispatcher/Invoke для обновления компонентов
+            не из UI потока
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.Helper.Settings">
+            <summary>
+            настройки программы, записывающиеся в XML формате
+            </summary>
+        </member>
+        <member name="P:Platonus_Tester.Helper.Settings.EnableLimit">
+            <summary>
+            Установить лимит вопросов (25 обычно), как на тестировании
+            </summary>
+        </member>
+        <member name="P:Platonus_Tester.Helper.Settings.ShowSwearing">
+            <summary>
+            Показать ругательные комментарии
+            </summary>
+        </member>
+        <member name="P:Platonus_Tester.Helper.Settings.DownloadSwears">
+            <summary>
+            Загружать ли комментарии с репозитория
+            </summary>
+        </member>
+        <member name="P:Platonus_Tester.Helper.Settings.LightColorScheme">
+            <summary>
+            Будет добавлена в будущем поддержка двух цветовых схем.
+            </summary>
+        </member>
+        <member name="P:Platonus_Tester.Helper.Settings.QuestionLimitCount">
+            <summary>
+            Количество лимита 
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.MainWindow">
+            <summary>
+            Логика взаимодействия для MainWindow.xaml
+            </summary>
+            <summary>
+            MainWindow
+            </summary>
+        </member>
+        <member name="M:Platonus_Tester.MainWindow.StartGrid_OnDrop(System.Object,System.Windows.DragEventArgs)">
+            <summary>
+            Обработка файла, который "скинули" в форму
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Platonus_Tester.MainWindow.ProcessSourceFile(Platonus_Tester.Model.SourceFile)">
+            <summary>
+            Обработка исходоного файла. Загрузка в лейблы.
+            </summary>
+            <param name="source"></param>
+        </member>
+        <member name="M:Platonus_Tester.MainWindow.OnSourceLoaded(System.Object,Platonus_Tester.CustomArgs.SourceFileLoadedArgs)">
+            <summary>
+            Listener, слушающий окончание обработки документа
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Platonus_Tester.MainWindow.GetHashListAsync(System.String)">
+            <summary>
+            Получение списков ругательств в фоновом процессе
+            </summary>
+            <param name="url"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Platonus_Tester.MainWindow.OpenFile(System.String)">
+            <summary>
+            Создание диалогового окна выбора файла и вызов обработки, если файл соответсвует валидации
+            </summary>
+            <param name="dragname"></param>
+        </member>
+        <member name="M:Platonus_Tester.MainWindow.ValidateFilename(System.String)">
+            <summary>
+            Валидация имени файла. Пока что только проверка на расширение файла
+            </summary>
+            <param name="file"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Platonus_Tester.MainWindow.CheckQuestion">
+            <summary>
+            Функция считывает тайтл варианта ответа, который был отмечен, и записывает его в новый объект - 
+            отвеченный вопрос, добавляя к массиву отвеченных
+            </summary>
+        </member>
+        <member name="M:Platonus_Tester.MainWindow.DisplayProgress(System.Int32)">
+            <summary>
+            Отобрадение прогресса отвеченных вопрсов в отношении всего массива
+            Just for Fun
+            </summary>
+            <param name="position"></param>
+        </member>
+        <member name="M:Platonus_Tester.MainWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.Model.AnsweredQuestion">
+            <summary>
+            Отвеченный вопрос, где добавляемые поля - отмеченный, верный и флаг корректности (лол)
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.Model.Question">
+            <summary>
+            Класс-предок для отвеченного вопроса и незаданного
+            </summary>
+        </member>
+        <member name="P:Platonus_Tester.Model.Question.AskQuestion">
+            <summary>
+            Вопрос
+            </summary>
+        </member>
+        <member name="P:Platonus_Tester.Model.Question.Picture">
+            <summary>
+            Изображение. Может быть NULL
+            </summary>
+        </member>
+        <member name="P:Platonus_Tester.Model.Question.AnswerList">
+            <summary>
+            Массив вариантов ответа
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.Model.SourceFile">
+            <summary>
+            Класс-обертка для исходного файла
+            </summary>
+        </member>
+        <member name="P:Platonus_Tester.Model.SourceFile.SourceText">
+            <summary>
+            текст документа. Включая таблицы и теги картинок
+            </summary>
+        </member>
+        <member name="P:Platonus_Tester.Model.SourceFile.Images">
+            <summary>
+            Массив картинок в формате библиотеки Novacode
+            </summary>
+        </member>
+        <member name="P:Platonus_Tester.Model.SourceFile.FileName">
+            <summary>
+            Имя документа в файл-системе для отобрадения в UI компонентах
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.Model.TestQuestion">
+            <summary>
+            тестовый (незаданный) вопрос. Добавляется только поле Верный ответ
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.Properties.Resources">
+            <summary>
+              Класс ресурсов со строгим типом для поиска локализованных строк и пр.
+            </summary>
+        </member>
+        <member name="P:Platonus_Tester.Properties.Resources.ResourceManager">
+            <summary>
+              Возврат кэшированного экземпляра ResourceManager, используемого этим классом.
+            </summary>
+        </member>
+        <member name="P:Platonus_Tester.Properties.Resources.Culture">
+            <summary>
+              Переопределяет свойство CurrentUICulture текущего потока для всех
+              подстановки ресурсов с помощью этого класса ресурсов со строгим типом.
+            </summary>
+        </member>
+    </members>
+</doc>
