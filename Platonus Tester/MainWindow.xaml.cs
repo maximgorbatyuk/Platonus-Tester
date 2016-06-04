@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -43,6 +44,7 @@ namespace Platonus_Tester
         private SourceFile _sourcefile = null;
 
         private readonly List<RadioButton> _radioButtonsList;
+        private readonly List<Rectangle> _recList;
 
 
         public MainWindow()
@@ -51,6 +53,10 @@ namespace Platonus_Tester
 
             InitializeComponent();
             Title = Const.ApplicationName;
+            WelcomeTextBlock.Text = Const.WelcomeText;
+            DescrTextBlock.Text = Const.DescriptionText;
+            serviceTextBox.Text = Const.InviteToLoadFile;
+            versionLabel.Content = $"Версия: {Const.Version}";
             _radioButtonsList = new List<RadioButton>
             {
                 RBVariant1,
@@ -59,6 +65,16 @@ namespace Platonus_Tester
                 RBVariant4,
                 RBVariant5,
             };
+
+            _recList = new List<Rectangle>
+            {
+                Rc1,
+                Rc2,
+                Rc3,
+                Rc4,
+                Rc5,
+            };
+
         }
 
         private void ChangeColorSchemeClick(object sender, RoutedEventArgs e)
@@ -85,9 +101,9 @@ namespace Platonus_Tester
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            _questionManager = new QuestionController();
-
-            _sourceController = new SourceController();
+            _questionManager    = new QuestionController();
+           // _settings           = SettingsController.Load();
+            _sourceController   = new SourceController();
             _sourceController.OnLoadComleted += OnSourceLoaded;
 
             _goodComment = new Comment();
@@ -95,7 +111,9 @@ namespace Platonus_Tester
             //---
             // Point renderedLocation = StartGrid.TranslatePoint(new Point(0, 0), MainWindow1);
             StartGrid.TranslatePoint(new Point(0, 0), MainWindow1);
-            return;
+            StartButton.Content = Const.LoadSourceFile;
+            _settings = SettingsController.Load();
+            swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
         }
 
         private async void ProcessSourceFile(SourceFile source)
@@ -135,7 +153,7 @@ namespace Platonus_Tester
             var errors = _questionManager.Errors;
             if (errors != null)
             {
-                // new ErrorDisplay(errors).ShowDialog();
+                new ErrorWindow(errors).ShowDialog();
             }
             if (_settings.DownloadSwears)
             {
@@ -145,9 +163,9 @@ namespace Platonus_Tester
 
         private async void OnSourceLoaded(object sender, SourceFileLoadedArgs e)
         {
-            //throw new NotImplementedException();
             _sourcefile = e.ProcessingResult;
             if (_sourcefile.SourceText == null) return;
+            StartButton.Content = Const.StartTesting;
             ProcessSourceFile(_sourcefile);
             
         }
@@ -170,7 +188,10 @@ namespace Platonus_Tester
             for (var i = 0; i < _radioButtonsList.Count; i++)
             {
                 var rb = _radioButtonsList[i];
+                var rec = _recList[i];
                 rb.Background = new SolidColorBrush(Const.LigthBackgroundColor);
+                rec.Fill = new SolidColorBrush(Const.LigthBackgroundColor );
+                rec.Fill = new SolidColorBrush(Const.LigthBackgroundColor );
 
                 rb.Content = GetRandomItem(hash, i);
                 hash.Remove((string) rb.Content);
@@ -326,6 +347,10 @@ namespace Platonus_Tester
                     answer.ChosenAnswer = (string) rb.Content;
                 }
             }
+            if (answer.ChosenAnswer == answer.CorrectAnswer)
+            {
+                answer.IsItCorrect = true;
+            }
             _answered.Add(answer);
         }
 
@@ -333,7 +358,7 @@ namespace Platonus_Tester
         {
             if ((_answered != null) && (_answered.Count > 0))
             {
-                // new ResultForm(_rigthChecked, _answered, _goodComment, _badComment).ShowDialog();
+                new ResultWindow(_answered, _goodComment, _badComment).ShowDialog();
             }
             StartGrid.Visibility = Visibility.Visible;
             _loadedFile = false;
@@ -350,15 +375,17 @@ namespace Platonus_Tester
         {
             if (_currentQuestion == null) return;
 
-            foreach (var rb in _radioButtonsList)
+            for (var index = 0; index < _radioButtonsList.Count; index++)
             {
+                var rb = _radioButtonsList[index];
+                var rec = _recList[index];
                 if ((string) rb.Content == _currentQuestion.CorrectAnswer)
                 {
-                    UInterfaceHelper.PaintBackColor(rb, true);
+                    UInterfaceHelper.PaintBackColor(rec, true);
                 }
                 else if (rb.IsChecked ?? false)
                 {
-                    UInterfaceHelper.PaintBackColor(rb, false);
+                    UInterfaceHelper.PaintBackColor(rec, false);
                 }
             }
         }
@@ -377,6 +404,7 @@ namespace Platonus_Tester
                 CheckQuestion();
                 _currentQuestion = _questionManager.GetNext();
                 LoadToLabels(_currentQuestion);
+
                 informationLabel.Content = $"Осталось вопросов: {_questionManager.GetCount() - _answered.Count}";
                 if (_answered.Count == _questionManager.GetCount())
                 {

@@ -115,6 +115,11 @@ namespace Platonus_Tester.Helper
             sender.Background = new SolidColorBrush(rigth ? Const.CorrectColor : Const.IncorrectColor );
         }
 
+        public static void PaintBackColor(System.Windows.Shapes.Shape sender, bool rigth)
+        {
+            sender.Fill = new SolidColorBrush(rigth ? Const.CorrectColor : Const.IncorrectColor);
+        }
+
         public static void SetText(TextBlock serviceTextBox, string text)
         {
             //Dispatcher.

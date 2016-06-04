@@ -1,4 +1,6 @@
-﻿using System.Windows.Media;
+﻿using System;
+using System.Reflection;
+using System.Windows.Media;
 
 namespace Platonus_Tester.Helper
 {
@@ -14,6 +16,8 @@ namespace Platonus_Tester.Helper
             "В программе присутствут ругательства! Если вы не желаете их видеть, то настройте вывод ругательств в настройках." +
             "По умолчанию они выключены";
 
+        public static readonly string Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
         public static readonly string WelcomeText = "Добро пожаловать в программу тестирования";
         public static readonly string LoadSourceFile = "Загрузить тест";
         public static readonly string StartTesting = "Начать тестирование";
@@ -27,7 +31,9 @@ namespace Platonus_Tester.Helper
         public static readonly string NextQuestion = "Следующий вопрос";
         public static readonly string WrongFilename = "Неверный формат файла";
         public static readonly string MissingVariant = "Ошибка: отсутствует вариант ответа";
-
+        public static readonly string CheckThis = "Проверить";
+        public static readonly string ProcessingProblem = $"Возникли проблемы с обработкой вопросов";
+        public static readonly string ResultTitle = "Результаты тестирования";
 
         public static string TEST_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Test-Unit-Project/master/SessionTestUnit/HashSource/test.txt";
         public static string HASH_100_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Test-Unit-Project/master/SessionTestUnit/HashSource/hash_100.txt";
@@ -47,7 +53,8 @@ namespace Platonus_Tester.Helper
 
         public static readonly Color CorrectColor = Color.FromArgb(255, 144, 232, 121);
         public static readonly Color IncorrectColor = Color.FromArgb(255, 233, 107, 107);
-        public static readonly string CheckThis = "Проверить";
-        public static readonly string ProcessingProblem = $"Возникли проблемы с обработкой вопросов";
+
+        public static readonly string InviteToLoadFile  = "Перетяните файл в окно";
+        public static readonly string PickAnAnswer      = "Выберите вопрос для просмотра";
     }
 }
