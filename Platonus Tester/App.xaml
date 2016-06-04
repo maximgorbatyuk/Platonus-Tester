@@ -5,5 +5,21 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <BitmapImage x:Key="TuranLogo" UriSource="../Media/logo.png" />
+
+        <Style x:Key="LigthWindowStyle" TargetType="Control">
+            <Setter Property="Background" Value="LightGray"></Setter>
+            <Setter Property="Foreground" Value="#151515"></Setter>
+        </Style>
+
+        <Style x:Key="DarkWindowStyle" TargetType="Control">
+            <Setter Property="Background" Value="#282828"></Setter>
+            <Setter Property="Foreground" Value="#E1E1E1"></Setter>
+        </Style>
+
+        <Style x:Key="QuestionStyle" TargetType="{x:Type Border}">
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="Black" />
+        </Style>
+
     </Application.Resources>
 </Application>

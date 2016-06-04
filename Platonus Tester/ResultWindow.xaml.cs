@@ -43,6 +43,7 @@ namespace Platonus_Tester
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Title = Const.ResultTitle;
+            answerTextBlock.Text = Const.PickAnAnswer;
             foreach (var a in _hash)
             {
                 if (a.IsItCorrect)
@@ -78,9 +79,9 @@ namespace Platonus_Tester
             var index = listBox.SelectedIndex;
             var item = _hash[index];
             answerTextBlock.Text = $"{item.AskQuestion}\nПравильный ответ: {item.CorrectAnswer}";
-            answerTextBlock.Text += item.IsItCorrect ? $"\nОтвет юзера: {item.ChosenAnswer}" : "";
-            answerTextBlock.Style =
-                (Style) FindResource(item.IsItCorrect ? "CorrectAnswerStyle" : "IncorrectAnswerStyle");
+            answerTextBlock.Text += !item.IsItCorrect ? $"\nОтвет юзера: {item.ChosenAnswer}" : "";
+            answerTextBlock.Background = new SolidColorBrush(
+                item.IsItCorrect ? Const.CorrectColor : Const.IncorrectColor);
         }
 
         private void okButton_Click(object sender, RoutedEventArgs e)

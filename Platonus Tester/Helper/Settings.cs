@@ -2,17 +2,19 @@
 {
     public class Settings
     {
-        public bool QuestionsLimit { get; set; }
+        public bool EnableLimit { get; set; }
         public bool ShowSwearing { get; set; }
         public bool DownloadSwears { get; set; }
         public bool LightColorScheme { get; set; }
+        public int  QuestionLimitCount { get; set; }
 
         public Settings()
         {
-            QuestionsLimit = false;
+            EnableLimit = false;
             ShowSwearing = false;
             DownloadSwears = false;
             LightColorScheme = true;
+            QuestionLimitCount = 25;
         }
     }
 }

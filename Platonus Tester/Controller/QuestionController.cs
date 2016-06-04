@@ -62,5 +62,7 @@ namespace Platonus_Tester.Controller
         {
             _limit = limit > _list.Count? _list.Count : limit;
         }
+
+        public int GetCurrentPosition() => _currentIndex;
     }
 }

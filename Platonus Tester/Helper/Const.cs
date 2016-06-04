@@ -11,16 +11,16 @@ namespace Platonus_Tester.Helper
             "Краткое описание: \n " +
             "Программа работает с файлами формата*.txt, *.doc и *.docx. " +
             "Достаточно просто перетянуть файл в форму или выбрать в диалоговом окне\n\n" +
-            "Более подробно можете узнать в описании программы, доступном на ГитХабе разработчика." +
+            "Более подробно можете узнать в описании программы, доступном на ГитХабе разработчика. " +
             "Кнопка 'О программе' как раз перенаправит пользователя на сайт с описанием.\n\n" +
-            "В программе присутствут ругательства! Если вы не желаете их видеть, то настройте вывод ругательств в настройках." +
+            "В программе присутствут ругательства! Если вы не желаете их видеть, то настройте вывод ругательств в настройках. " +
             "По умолчанию они выключены";
 
         public static readonly string Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         public static readonly string WelcomeText = "Добро пожаловать в программу тестирования";
         public static readonly string LoadSourceFile = "Загрузить тест";
-        public static readonly string StartTesting = "Начать тестирование";
+        public static readonly string StartTesting = "Начать тест";
         public static readonly string CheckQuestion = "Проверить тест";
         public static readonly string ProgrammSetings = "Настройки программы";
         public static readonly string DraggingFiles = "Захватываю файл";
@@ -45,7 +45,7 @@ namespace Platonus_Tester.Helper
 
 
         public static readonly Color LigthBlack = Color.FromArgb(118, 0, 0, 0);
-        public static readonly Color LigthBackgroundColor = Color.FromArgb(255, 240, 240, 240);
+        public static readonly Color LigthBackgroundColor = Color.FromArgb(255, 245, 245, 245);
         public static readonly Color DarkBackgroundColor = Color.FromArgb(255, 43, 43, 43);
 
         public static readonly Color LigthFontColor = Color.FromArgb(255, 33, 33, 33);
@@ -56,5 +56,20 @@ namespace Platonus_Tester.Helper
 
         public static readonly string InviteToLoadFile  = "Перетяните файл в окно";
         public static readonly string PickAnAnswer      = "Выберите вопрос для просмотра";
+
+        public static readonly string Enabled = "Вкл";
+
+        public static readonly string Disabled = "Выкл";
+
+        public static readonly string LimitEnableText = "Установить лимит вопросов (не все вопросы будут выведены)";
+
+        public static readonly string LimitCountSet = "Установить число лимита вопросов";
+
+        public static readonly string ShowSwearEnableText = "Показывать ругательства ;) в комментариях";
+
+        public static readonly string DownloadSwearEnableText = "Загружать ругательства ;) из GitHub";
+
+        public static readonly string ColorChemeEnabledText = "Светлая цветовая схема";
+        public static readonly string SettingsText = "Настройки";
     }
 }

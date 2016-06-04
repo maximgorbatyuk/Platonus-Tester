@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Platonus_Tester"
         mc:Ignorable="d"
-        Title="ErrorWindow" Height="462.406" Width="421.805" Loaded="Window_Loaded">
+        Title="ErrorWindow" Height="462.406" Width="421.805" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen" Icon="Media/icon.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="112*"/>

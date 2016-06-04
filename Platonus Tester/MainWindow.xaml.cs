@@ -49,14 +49,15 @@ namespace Platonus_Tester
 
         public MainWindow()
         {
-            // TODO: Rectangle editing
 
             InitializeComponent();
             Title = Const.ApplicationName;
             WelcomeTextBlock.Text = Const.WelcomeText;
             DescrTextBlock.Text = Const.DescriptionText;
             serviceTextBox.Text = Const.InviteToLoadFile;
+            informationLabel.Content = "";
             versionLabel.Content = $"Версия: {Const.Version}";
+            SettingsButton.Content = Const.SettingsText;
             _radioButtonsList = new List<RadioButton>
             {
                 RBVariant1,
@@ -80,7 +81,12 @@ namespace Platonus_Tester
         private void ChangeColorSchemeClick(object sender, RoutedEventArgs e)
         {
             //throw new NotImplementedException();
-            StartGrid.Visibility = StartGrid.IsVisible ? Visibility.Hidden : Visibility.Visible;
+
+            //var resource = (Style)FindResource(value ? "LigthWindowStyle" : "DarkWindowStyle");
+            //MainWindow1.Style = resource;
+            //StartGrid.Style = resource;
+            //QuestionGrid.Style = resource;
+            //value = !value;
         }
 
         private void StartGrid_OnDrop(object sender, DragEventArgs e)
@@ -119,36 +125,33 @@ namespace Platonus_Tester
         private async void ProcessSourceFile(SourceFile source)
         {
             _questionManager.SetSourceList(source);
-            if (_settings.QuestionsLimit)
+            if (_settings.EnableLimit)
             {
-                _questionManager.SetQuestionLimit(25);
+                _questionManager.SetQuestionLimit(_settings.QuestionLimitCount);
             }
             //----------------------------
             _currentQuestion = _questionManager.GetNext();
             _count += 1;
             LoadToLabels(_currentQuestion);
-            UInterfaceHelper.SetText(
-                informationLabel, $"Осталось вопросов: {_questionManager.GetCount()}");
+            informationLabel.Content = $"Осталось вопросов: {_questionManager.GetCount()}";
 
-            UInterfaceHelper.SetText(
-                swearLabel, _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled);
+            swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
             //
-            var count = _questionManager.GetCount() + 1;
+            var count = _questionManager.GetCount();
             if (count > 0)
             {
-                UInterfaceHelper.SetText(serviceTextBox, $"Файл загружен. Нажмите \"Начать\". Вопросов {count}");
+                serviceTextBox.Text = $"Файл {source.FileName} загружен. Нажмите \"Начать\". Вопросов {count}";
                 _loadedFile = true;
-                UInterfaceHelper.SetEnable(StartButton, true);
+                StartButton.IsEnabled = true;
             }
             else
             {
-                UInterfaceHelper.SetText(serviceTextBox,
-                    $"Возникли проблемы с обработкой вопросов");
+                serviceTextBox.Text = $"Возникли проблемы с обработкой вопросов";
             }
             //--------------------------
-            UInterfaceHelper.SetText(NextButton, Const.NextQuestion);
-            UInterfaceHelper.SetText(CheckButton, Const.CheckQuestion);
-            UInterfaceHelper.SetProgressValue(progressBar, 100);
+            NextButton.Content = Const.NextQuestion;
+            CheckButton.Content = Const.CheckQuestion;
+            //UInterfaceHelper.SetProgressValue(progressBar, 100);
 
             var errors = _questionManager.Errors;
             if (errors != null)
@@ -161,11 +164,13 @@ namespace Platonus_Tester
             }
         }
 
-        private async void OnSourceLoaded(object sender, SourceFileLoadedArgs e)
+        private void OnSourceLoaded(object sender, SourceFileLoadedArgs e)
         {
             _sourcefile = e.ProcessingResult;
             if (_sourcefile.SourceText == null) return;
             StartButton.Content = Const.StartTesting;
+            progressBar.IsIndeterminate = false;
+            progressBar.Value = 0;
             ProcessSourceFile(_sourcefile);
             
         }
@@ -295,6 +300,8 @@ namespace Platonus_Tester
                 return;
             }
             serviceTextBox.Text = Const.FileProcessing;
+            progressBar.IsIndeterminate = true;
+            progressBar.Visibility = Visibility.Visible;
             //UInterfaceHelper.SetText(serviceTextBox, Const.FileProcessing);
             LoadSettings();
         }
@@ -323,7 +330,7 @@ namespace Platonus_Tester
         private void AboutMenuItem_Click(object sender, RoutedEventArgs e)
         {
             Process.Start(
-                "https://github.com/maximgorbatyuk/Test-Unit-Project/blob/master/README.md#test-unit-project");
+                "https://github.com/maximgorbatyuk/Platonus-Tester/");
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
@@ -362,8 +369,9 @@ namespace Platonus_Tester
             }
             StartGrid.Visibility = Visibility.Visible;
             _loadedFile = false;
-            serviceTextBox.Text = "";
+            serviceTextBox.Text = Const.InviteToLoadFile;
             StartButton.Content = Const.LoadSourceFile;
+            informationLabel.Content = "";
         }
 
         private void SettingsMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -390,6 +398,15 @@ namespace Platonus_Tester
             }
         }
 
+        private void DisplayProgress(int position)
+        {
+            var count = _questionManager.GetCount();
+            count = count > 0 ? count: 1;
+            var pValue = (double)position / count * 100;
+            pValue = pValue > 100 ? 100 : pValue;
+            progressBar.Value = pValue;
+        }
+
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
             
@@ -404,7 +421,7 @@ namespace Platonus_Tester
                 CheckQuestion();
                 _currentQuestion = _questionManager.GetNext();
                 LoadToLabels(_currentQuestion);
-
+                DisplayProgress(_questionManager.GetCurrentPosition());
                 informationLabel.Content = $"Осталось вопросов: {_questionManager.GetCount() - _answered.Count}";
                 if (_answered.Count == _questionManager.GetCount())
                 {

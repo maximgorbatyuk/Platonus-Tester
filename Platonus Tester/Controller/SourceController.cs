@@ -60,6 +60,12 @@ namespace Platonus_Tester.Controller
                 file = GetDocXText(_fileName);
                 //DefineResult(GetDocXText(_fileName));
             }
+            if (file != null)
+            {
+                var pos = _fileName.LastIndexOf("\\");
+                pos = pos != -1 ? pos + 1 : 0;
+                file.FileName = _fileName.Substring(pos);
+            }
             e.Result = file;
         }
 
