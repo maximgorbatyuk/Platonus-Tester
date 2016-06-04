@@ -5,6 +5,10 @@ using Platonus_Tester.Model;
 
 namespace Platonus_Tester.Controller
 {
+    /// <summary>
+    /// Класс для обработки массива готовых тестовых вопросов
+    ///
+    /// </summary>
     public class QuestionController
     {
         private List<TestQuestion> _list;
@@ -30,6 +34,9 @@ namespace Platonus_Tester.Controller
             Shuffle();
         }
 
+        /// <summary>
+        /// Перемешение вопросов в массиве.
+        /// </summary>
         public void Shuffle()
         {
             var count = _list.Count;
@@ -43,6 +50,12 @@ namespace Platonus_Tester.Controller
             _list = result;
         }
 
+        /// <summary>
+        /// Возвращает следующий вопрос. Раньше (до перевода на WPF 04.06.2016) метод удалял
+        /// возвращаемый вопрос. Сейчас принцип выдачи изменен, так как в планах
+        /// сделать переход по предыдущим вопросам
+        /// </summary>
+        /// <returns></returns>
         public TestQuestion GetNext()
         {
             if (_currentIndex >= _list.Count || _currentIndex >= _limit)

@@ -15,13 +15,38 @@ using Image = System.Drawing.Image;
 
 namespace Platonus_Tester.Controller
 {
+    /// <summary>
+    /// Класс для управления входным файлом. За основу взята библиотека 
+    /// Novacode.DocX, как бесплатная и легкодоступная. Из проблем библиотеки
+    /// стоит отметить то, что работает она в одном потоке, и в ней нет функций async / await
+    /// Это значит, что мне нужно организовать работу в фоне, так как загрузка файла docx/doc
+    /// Может занимать достаточное для глаза время блокировки UI треда.
+    /// Например, тест по ИнфБез открывается около 6 секунд
+    /// </summary>
     public class SourceController
     {
+        /// <summary>
+        /// Здесь я определяю реализацию паттерна Listenter (Observer)
+        /// Когда заканчивается обработка документа, вызывается событие окончания, 
+        /// и данные в UI потоке обновляются
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public delegate void SourceFileLoadCompleted(object sender, SourceFileLoadedArgs e);
         public event SourceFileLoadCompleted OnLoadComleted;
         private string _fileName;
         private Thread _thread;
 
+        /// <summary>
+        /// Инициализация. Здесь же определяю и Background worker
+        /// Об этой функции узнал недавно (04.06.2016), так как были проблемы с Thread.Start
+        /// Создание отедльного треда вынудило использовать кучу костылей в обновлении UI компонентов, 
+        /// Доходило до того, что я и компонент, и переменную для обновления (внутри лямбда функции) 
+        /// вызывал через Dispatcher
+        /// Вывод: в WinForm создание треда было проще (или просто мне понятней)
+        /// </summary>
+        /// <param name="fileName"></param>
         public void ProcessSourceFileAsync(string fileName)
         {
             _fileName = fileName;
@@ -62,18 +87,16 @@ namespace Platonus_Tester.Controller
             }
             if (file != null)
             {
-                var pos = _fileName.LastIndexOf("\\");
+                var pos = _fileName.LastIndexOf("\\", StringComparison.Ordinal);
                 pos = pos != -1 ? pos + 1 : 0;
                 file.FileName = _fileName.Substring(pos);
             }
             e.Result = file;
         }
 
-        private void StartProcessing()
-        {
-            
-        }
-
+        /// <summary>
+        /// Если был передан обыкновенный текстовый файл
+        /// </summary>
         private SourceFile GetTXT(string filename)
         {
             StreamReader reader = null;
@@ -95,6 +118,10 @@ namespace Platonus_Tester.Controller
             return new SourceFile(text, null);
         }
 
+        /// <summary>
+        /// Эта функция берет файл и создает документ-контейнер для него.
+        /// Это занимает некоторое время, что вынуждает использовать раздельные потоки
+        /// </summary>
         private SourceFile GetDocXText(string filename)
         {
             var document = DocX.Load(filename);
@@ -129,7 +156,18 @@ namespace Platonus_Tester.Controller
             return result;
         }
 
-        private string ReplaceImages(string text, Container doc)
+        /// <summary>
+        /// Функция для поиска и замены изображений в документе
+        /// Пробегаюсь по параграфам и нахожу картинки
+        /// Картинки имею свое имя. Обычно один параграф и есть одна картинка, что упрощает поиск
+        /// Чтобы в дальнейшем запомнить положение той или иной картинки, я 
+        /// Заменяю место в тексте специальным тегом #picture \\name\\
+        /// В дальнейшем при обработке я ищу эти теги и заменяю картинками по имени
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="doc"></param>
+        /// <returns>Полный текст документа + теги картинок</returns>
+        private static string ReplaceImages(string text, Container doc)
         {
             var newText = "";
             foreach (var p in doc.Paragraphs)
@@ -143,11 +181,19 @@ namespace Platonus_Tester.Controller
             return newText;
         }
 
-        private string ReplaceTables(string text, Container doc)
+        /// <summary>
+        /// Функция для замены таблиц в документе текстовым аналогом 
+        /// | столбец | столбец |
+        /// | строка  | строка  |
+        /// Выравнивание пока не реализовано, но пока и так вариант ответа понятен
+        /// Каждая ячейка в исходном документе была отдельным параграфом, поэтому я передаю и исходный текст,
+        /// чтобы заменить эти ошибки на презентабельный вид
+        /// </summary>
+        /// <param name="text">текст с картинками</param>
+        /// <param name="doc">Контейнер документа</param>
+        /// <returns>Полный текст (с картинками) + Таблицы</returns>
+        private static string ReplaceTables(string text, Container doc)
         {
-            // TODO: 
-            // Here is table text processing. Need to be debugged
-            // Also I didn't feagure out about replacing tables in main text
 
             foreach (var p in doc.Tables)
             {
@@ -175,6 +221,10 @@ namespace Platonus_Tester.Controller
             return text;
         }
 
+        /// <summary>
+        /// Событие, создающее возникновения события обработки
+        /// </summary>
+        /// <param name="text"></param>
         private void DefineResult(SourceFile text)
         {
             if (OnLoadComleted == null) return;

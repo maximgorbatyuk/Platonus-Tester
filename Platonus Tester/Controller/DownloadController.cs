@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 
 namespace Platonus_Tester.Controller
 {
+    /// <summary>
+    /// Класс-помощник для загрузки новых комментариев с репозитория на GitHub
+    /// Операции выполняются асинхронно
+    /// </summary>
     public abstract class DownloadController
     {
 
@@ -29,6 +33,11 @@ namespace Platonus_Tester.Controller
 
         }
 
+        /// <summary>
+        /// Прежде всего вызывается проверка на соединение
+        /// отсутствует - значит нет комментариев
+        /// </summary>
+        /// <returns></returns>
         public static bool CheckForInternetConnection()
         {
             try

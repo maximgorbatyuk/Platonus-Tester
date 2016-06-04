@@ -1,5 +1,8 @@
 ﻿namespace Platonus_Tester.Model
 {
+    /// <summary>
+    /// Отвеченный вопрос, где добавляемые поля - отмеченный, верный и флаг корректности (лол)
+    /// </summary>
     public class AnsweredQuestion : Question
     {
         public string ChosenAnswer;

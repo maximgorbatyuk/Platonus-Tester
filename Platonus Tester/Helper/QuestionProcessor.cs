@@ -6,6 +6,9 @@ using Platonus_Tester.Model;
 
 namespace Platonus_Tester.Helper
 {
+    /// <summary>
+    /// Класс-кор проекта. Обработчик текста вопросов в хэш вопросов-объектов
+    /// </summary>
     public class QuestionProcessor
     {
         private SourceFile _file;
@@ -16,6 +19,12 @@ namespace Platonus_Tester.Helper
             _errorList = new List<string>(0);
         }
 
+        /// <summary>
+        /// Функция-инициализатор обработки. Определяю количество вхождений слова question в тегах 
+        /// для того, чтобы определить количество итераций. 
+        /// </summary>
+        /// <param name="file">Объект содержит текст и картинки</param>
+        /// <returns>Массив тестовых вопросов</returns>
         public List<TestQuestion> GetQuestionList(SourceFile file)
         {
             _file = file;
@@ -48,6 +57,11 @@ namespace Platonus_Tester.Helper
             return result;
         }
 
+        /// <summary>
+        /// Здесь планирую сделать замену TAMOS формата в Platonus формат
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
         private static string ProcessText(string text)
         {
             /*
@@ -62,6 +76,11 @@ namespace Platonus_Tester.Helper
             return result;
         }
 
+        /// <summary>
+        /// Функция, возвращающая тестовый вопрос
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
         private TestQuestion GetQuestion(string text)
         {
             try
@@ -122,6 +141,11 @@ namespace Platonus_Tester.Helper
             }
         }
 
+        /// <summary>
+        /// Поиск и удаление всех вхождений тегов picture
+        /// </summary>
+        /// <param name="text">Исходный текст для форматирования</param>
+        /// <returns>Текст без тегов картинок</returns>
         private string RemovePictureText(string text)
         {
             if (GetIndex("<#picture= ", text) == -1)
@@ -150,6 +174,12 @@ namespace Platonus_Tester.Helper
             }
         }
 
+        /// <summary>
+        /// Функция - вычислитель количество вхождений слова в тексте
+        /// </summary>
+        /// <param name="word">Искомое слово</param>
+        /// <param name="source">Текст, в котором ищется слово</param>
+        /// <returns>Количество вхождений</returns>
         public int GetWordCount(string word, string source)
         {
             return (source.Length - source.Replace(word, "").Length) / word.Length;
@@ -179,6 +209,11 @@ namespace Platonus_Tester.Helper
             return text.IndexOf(search, StringComparison.Ordinal);
         }
 
+        /// <summary>
+        /// Поиск и возврат картинки по названию
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         private Image FindImageByName(string name)
         {
             Image result = null;

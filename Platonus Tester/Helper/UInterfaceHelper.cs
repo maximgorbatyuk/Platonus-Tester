@@ -10,6 +10,11 @@ using Image = System.Windows.Controls.Image;
 
 namespace Platonus_Tester.Helper
 {
+    /// <summary>
+    /// Класс для вспомогательных функций обработки компонентов формы, чтобы сделать код в UI классах чище
+    /// До версии 2.0 была необходимость в использовании Dispatcher/Invoke для обновления компонентов
+    /// не из UI потока
+    /// </summary>
     public abstract class UInterfaceHelper
     {
         public static void SetWidth(Control label, int width)

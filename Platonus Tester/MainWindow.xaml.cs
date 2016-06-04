@@ -66,7 +66,7 @@ namespace Platonus_Tester
                 RBVariant4,
                 RBVariant5,
             };
-
+            RBVariant1.IsChecked = true;
             _recList = new List<Rectangle>
             {
                 Rc1,
@@ -89,6 +89,11 @@ namespace Platonus_Tester
             //value = !value;
         }
 
+        /// <summary>
+        /// Обработка файла, который "скинули" в форму
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StartGrid_OnDrop(object sender, DragEventArgs e)
         {
             if (!e.Data.GetDataPresent(DataFormats.FileDrop)) return;
@@ -122,6 +127,10 @@ namespace Platonus_Tester
             swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
         }
 
+        /// <summary>
+        /// Обработка исходоного файла. Загрузка в лейблы.
+        /// </summary>
+        /// <param name="source"></param>
         private async void ProcessSourceFile(SourceFile source)
         {
             _questionManager.SetSourceList(source);
@@ -164,6 +173,11 @@ namespace Platonus_Tester
             }
         }
 
+        /// <summary>
+        /// Listener, слушающий окончание обработки документа
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnSourceLoaded(object sender, SourceFileLoadedArgs e)
         {
             _sourcefile = e.ProcessingResult;
@@ -227,9 +241,13 @@ namespace Platonus_Tester
             }
         }
 
+        /// <summary>
+        /// Получение списков ругательств в фоновом процессе
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
         private async Task GetHashListAsync(string url)
         {
-            // Получение списков ругательств в фоновом процессе
             try
             {
                 if (!DownloadController.CheckForInternetConnection()) return;
@@ -274,6 +292,10 @@ namespace Platonus_Tester
             swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
         }
 
+        /// <summary>
+        /// Создание диалогового окна выбора файла и вызов обработки, если файл соответсвует валидации
+        /// </summary>
+        /// <param name="dragname"></param>
         private void OpenFile(string dragname = null)
         {
             serviceTextBox.Background = new SolidColorBrush( Const.LigthBackgroundColor );
@@ -305,8 +327,13 @@ namespace Platonus_Tester
             //UInterfaceHelper.SetText(serviceTextBox, Const.FileProcessing);
             LoadSettings();
         }
-
-        private bool ValidateFilename(string file)
+        
+        /// <summary>
+        /// Валидация имени файла. Пока что только проверка на расширение файла
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        private static bool ValidateFilename(string file)
         {
             return file.IndexOf(".docx", StringComparison.Ordinal) > -1 ||
                    file.IndexOf(".doc", StringComparison.Ordinal) > -1 ||
@@ -338,7 +365,10 @@ namespace Platonus_Tester
             new SettingsForm().ShowDialog();
         }
 
-
+        /// <summary>
+        /// Функция считывает тайтл варианта ответа, который был отмечен, и записывает его в новый объект - 
+        /// отвеченный вопрос, добавляя к массиву отвеченных
+        /// </summary>
         private void CheckQuestion()
         {
             var answer = new AnsweredQuestion
@@ -398,6 +428,11 @@ namespace Platonus_Tester
             }
         }
 
+        /// <summary>
+        /// Отобрадение прогресса отвеченных вопрсов в отношении всего массива
+        /// Just for Fun
+        /// </summary>
+        /// <param name="position"></param>
         private void DisplayProgress(int position)
         {
             var count = _questionManager.GetCount();

@@ -6,6 +6,9 @@ using Platonus_Tester.Helper;
 
 namespace Platonus_Tester.Controller
 {
+    /// <summary>
+    /// Класс для управления настройками. Настройки записываются в XML формате в файл в той же директории
+    /// </summary>
     public abstract class SettingsController
     {
         private const string FileName = "settings.xml";
@@ -19,6 +22,10 @@ namespace Platonus_Tester.Controller
             }
         }
 
+        /// <summary>
+        /// Загрузка настроек из файла. Если происходит ошибка, возвращаются станлартные настройки
+        /// </summary>
+        /// <returns></returns>
         public static Settings Load()
         {
             StreamReader stream = null;

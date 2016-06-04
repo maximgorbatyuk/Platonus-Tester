@@ -4,6 +4,11 @@ using System.Windows.Media;
 
 namespace Platonus_Tester.Helper
 {
+    /// <summary>
+    /// Here I tryed to make an imitation of String resource file
+    /// This variables a assigned to Control-components contents and titles
+    /// Also here Color const placed.
+    /// </summary>
     public class Const
     {
         public static readonly string ApplicationName = "Platonus Tester";
@@ -35,15 +40,16 @@ namespace Platonus_Tester.Helper
         public static readonly string ProcessingProblem = $"Возникли проблемы с обработкой вопросов";
         public static readonly string ResultTitle = "Результаты тестирования";
 
-        public static string TEST_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Test-Unit-Project/master/SessionTestUnit/HashSource/test.txt";
-        public static string HASH_100_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Test-Unit-Project/master/SessionTestUnit/HashSource/hash_100.txt";
-        public static string HASH_90_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Test-Unit-Project/master/SessionTestUnit/HashSource/hash_90.txt";
-        public static string HASH_75_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Test-Unit-Project/master/SessionTestUnit/HashSource/hash_75.txt";
-        public static string HASH_60_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Test-Unit-Project/master/SessionTestUnit/HashSource/hash_60.txt";
-        public static string HASH_50_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Test-Unit-Project/master/SessionTestUnit/HashSource/hash_50.txt";
-        public static string HASH_0_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Test-Unit-Project/master/SessionTestUnit/HashSource/hash_0.txt";
+        public static string TEST_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Platonus-Tester/master/Platonus%20Tester/HashSource/test.txt";
+        public static string HASH_100_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Platonus-Tester/master/Platonus%20Tester/HashSource/hash_100.txt";
+        public static string HASH_90_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Platonus-Tester/master/Platonus%20Tester/HashSource/hash_90.txt";
+        public static string HASH_75_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Platonus-Tester/master/Platonus%20Tester/HashSource/hash_75.txt";
+        public static string HASH_60_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Platonus-Tester/master/Platonus%20Tester/HashSource/hash_60.txt";
+        public static string HASH_50_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Platonus-Tester/master/Platonus%20Tester/HashSource/hash_50.txt";
+        public static string HASH_0_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Platonus-Tester/master/Platonus%20Tester/HashSource/hash_0.txt";
 
 
+        
         public static readonly Color LigthBlack = Color.FromArgb(118, 0, 0, 0);
         public static readonly Color LigthBackgroundColor = Color.FromArgb(255, 245, 245, 245);
         public static readonly Color DarkBackgroundColor = Color.FromArgb(255, 43, 43, 43);

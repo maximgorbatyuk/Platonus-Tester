@@ -95,7 +95,6 @@
     <Compile Include="Helper\Const.cs" />
     <Compile Include="Helper\QuestionProcessor.cs" />
     <Compile Include="Helper\SwearHashProcessor.cs" />
-    <Compile Include="Helper\TextBlockFactory.cs" />
     <Compile Include="Helper\UInterfaceHelper.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Platonus_Tester.Helper
 {
+    /// <summary>
+    /// Обработчик скачанного текста с репозитория в массив строк
+    /// </summary>
     public abstract class SwearHashProcessor
     {
 

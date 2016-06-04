@@ -2,6 +2,9 @@
 
 namespace Platonus_Tester.Comments
 {
+    /// <summary>
+    /// Класс потомок комментария. Перезаписывается только хэш набор комментариев
+    /// </summary>
     public class Swear : Comment
     {
         protected override void InitiateHashes()

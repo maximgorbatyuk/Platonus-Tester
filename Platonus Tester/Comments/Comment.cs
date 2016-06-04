@@ -4,13 +4,13 @@ using Platonus_Tester.Helper;
 
 namespace Platonus_Tester.Comments
 {
+    /// <summary>
+    /// Этот класс является предком для класса ругательств
+    /// Здесь определены все методы, а так же хэши комментариев
+    /// В дочернем классе переопределены именно хэши
+    /// </summary>
     public class Comment
     {
-        /*
-         * Этот класс является предком для класса ругательств
-         * Здесь определены все методы, а так же хэши комментариев
-         * В дочернем классе переопределены именно хэши
-         */
 
         protected List<string> _hash_100;
         protected List<string> _hash_99_90;
@@ -24,6 +24,11 @@ namespace Platonus_Tester.Comments
             InitiateHashes();
         }
 
+        /// <summary>
+        /// Функция возвращает рандомный элемент из массива комментариев
+        /// </summary>
+        /// <param name="res"></param>
+        /// <returns></returns>
         public string Get(double res)
         {
 
@@ -63,6 +68,9 @@ namespace Platonus_Tester.Comments
             return new Random().Next(count);
         }
 
+        /// <summary>
+        /// Инициализация массивов, которая перезаписывается в дочерних элменетах
+        /// </summary>
         protected virtual void InitiateHashes()
         {
             _hash_100 = new List<string>(0)
