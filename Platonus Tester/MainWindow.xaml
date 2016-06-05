@@ -30,41 +30,27 @@
                 <ColumnDefinition Width="73*"/>
                 <ColumnDefinition Width="73*"/>
             </Grid.ColumnDefinitions>
-            <Border x:Name="Border" Style="{StaticResource QuestionStyle}" Grid.ColumnSpan="5" Grid.RowSpan="2"/>
-            <TextBlock x:Name="QuestionTextBlock" Margin="10" TextWrapping="Wrap" Text="TextBlock" FontSize="16" Grid.RowSpan="2" Grid.ColumnSpan="5" Foreground="Black"/>
-            <RadioButton x:Name="RbVariant2" Margin="10" Grid.Row="3" Grid.Column="0"
-                         BorderBrush="#FF403F3F" Background="{x:Null}" FontSize="16" Grid.ColumnSpan="3">
-                <RadioButton.Content>
-                    <TextBlock x:Name="V2TextBlock" TextWrapping="Wrap" Text="TextBlock" Height="35" Width="418"/>
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton x:Name="RbVariant1" Margin="10,10,10,8" Grid.Row="2" BorderBrush="Black" Background="{x:Null}" FontSize="16" Foreground="Black" Grid.ColumnSpan="3"
-                         Grid.Column="0">
-                <RadioButton.Content>
-                    <TextBlock x:Name="V1TextBlock" TextWrapping="Wrap" Text="TextBlock" Height="35" Width="418"/>
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton x:Name="RbVariant3" Margin="10" Grid.Row="4" BorderBrush="#FF403F3F" Background="{x:Null}" FontSize="16" Grid.ColumnSpan="3">
-                <RadioButton.Content>
-                    <TextBlock x:Name="V3TextBlock" TextWrapping="Wrap" Text="TextBlock" Height="35" Width="418"/>
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton x:Name="RbVariant4" Margin="10" Grid.Row="5" BorderBrush="#FF403F3F" Background="{x:Null}" FontSize="16" Grid.ColumnSpan="3">
-                <RadioButton.Content>
-                    <TextBlock x:Name="V4TextBlock" TextWrapping="Wrap" Text="TextBlock" Height="35" Width="418"/>
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton x:Name="RbVariant5" Margin="10" Grid.Row="6" BorderBrush="#FF403F3F" Background="{x:Null}" FontSize="16" Grid.ColumnSpan="3">
-                <RadioButton.Content>
-                    <TextBlock x:Name="V5TextBlock" TextWrapping="Wrap" Text="TextBlock" Height="35" Width="418"/>
-                </RadioButton.Content>
-            </RadioButton>
+            <Border x:Name="border" Style="{StaticResource QuestionStyle}" Grid.ColumnSpan="5" Margin="10" Grid.RowSpan="2">
 
-            <Image x:Name="Image1" Grid.Column="3" Margin="10,10,10,8" Grid.RowSpan="5" OpacityMask="#FFF1F1F1" Stretch="Fill" Grid.Row="2" Grid.ColumnSpan="2"/>
+            </Border>
+            <TextBlock x:Name="questionTextBlock" Margin="10" TextWrapping="Wrap" Text="TextBlock" FontSize="16" Grid.RowSpan="2" Grid.ColumnSpan="5" Foreground="Black"/>
+            <Rectangle x:Name="Rc1"  Margin="10,10,10,8" Grid.Row="2" Fill="WhiteSmoke" Grid.ColumnSpan="3"/>
+            <Rectangle x:Name="Rc2" Fill="#FFF4F4F5" Margin="10" Grid.Row="3" Grid.ColumnSpan="3"/>
+            <Rectangle x:Name="Rc3" Fill="#FFF4F4F5" Margin="10" Grid.Row="4" Grid.ColumnSpan="3"/>
+            <Rectangle x:Name="Rc4" Fill="WhiteSmoke" Margin="10" Grid.Row="5" Grid.ColumnSpan="3"/>
+            <RadioButton x:Name="RBVariant2" Content="Variant 2" Margin="10,10,55,10" Grid.Row="3" Grid.Column="0"
+                         BorderBrush="#FF403F3F" Background="{x:Null}" FontSize="16" Grid.ColumnSpan="3"/>
+            <Rectangle x:Name="Rc5" Fill="#FFF4F4F5" Margin="10" Grid.Row="6" Grid.ColumnSpan="3"/>
+            <RadioButton x:Name="RBVariant1" Content="Variant 1" Margin="10,10,55,8" Grid.Row="2" BorderBrush="Black" Background="{x:Null}" FontSize="16" Foreground="Black" Grid.ColumnSpan="3" />
+            <RadioButton x:Name="RBVariant3" Content="Variant 3" Margin="10,10,55,10" Grid.Row="4" BorderBrush="#FF403F3F" Background="{x:Null}" FontSize="16" Grid.ColumnSpan="3"/>
+            <RadioButton x:Name="RBVariant4" Content="Variant 4" Margin="10,10,55,10" Grid.Row="5" BorderBrush="#FF403F3F" Background="{x:Null}" FontSize="16" Grid.ColumnSpan="3"/>
+            <RadioButton x:Name="RBVariant5" Content="Variant 5" Margin="10,10,55,10" Grid.Row="6" BorderBrush="#FF403F3F" Background="{x:Null}" FontSize="16" Grid.ColumnSpan="3"/>
+
+            <Image x:Name="image1" Grid.Column="3" Margin="10,10,10,8" Grid.RowSpan="5" OpacityMask="#FFF1F1F1" Stretch="Fill" Grid.Row="2" Grid.ColumnSpan="2"/>
             <Button x:Name="NextButton" Content="Next" Margin="10,0,10,10" Click="NextButton_Click" Grid.Row="8" Grid.Column="1"/>
             <Button x:Name="CheckButton" Content="Check" Margin="10,0,10,10" Click="CheckButton_Click" Grid.Row="8"/>
         </Grid>
-        <Menu x:Name="Menu" Height="29" VerticalAlignment="Top" FontSize="14" Background="Gainsboro">
+        <Menu x:Name="menu" Height="29" VerticalAlignment="Top" FontSize="14" Background="Gainsboro">
             <MenuItem Header="Программа" VerticalAlignment="Center">
                 <MenuItem Header="Настройки" Click="SettingsMenuItem_OnClick" />
                 <MenuItem Header="Цветовая схема" IsEnabled="False" Click="ChangeColorSchemeClick"/>
@@ -77,12 +63,12 @@
             <MenuItem x:Name="AboutMenuItem" Header="О программе" Click="AboutMenuItem_Click"/>
         </Menu>
         <StatusBar Height="35" VerticalAlignment="Bottom" Background="Gainsboro">
-            <Label x:Name="VersionLabel" Content="Version"/>
-            <Label x:Name="SwearLabel" Content="Swear Mode"/>
-            <Label x:Name="InformationLabel" Content="Information"/>
+            <Label x:Name="versionLabel" Content="Version"/>
+            <Label x:Name="swearLabel" Content="Swear Mode"/>
+            <Label x:Name="informationLabel" Content="Information"/>
         </StatusBar>
-        <ProgressBar x:Name="ProgressBar" Margin="0,0,10,8" Height="18" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="173"/>
-        <Grid x:Name="StartGrid" Margin="164,34,-144,40" AllowDrop="True" DragOver="StartGrid_OnDragOver" Drop="StartGrid_OnDrop" DragEnter="StartGrid_DragEnter" Background="WhiteSmoke" >
+        <ProgressBar x:Name="progressBar" Margin="0,0,10,8" Height="18" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="173"/>
+        <Grid x:Name="StartGrid" Margin="10,34,10,40" AllowDrop="True" DragOver="StartGrid_OnDragOver" Drop="StartGrid_OnDrop" DragEnter="StartGrid_DragEnter" Background="WhiteSmoke" >
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition Height="118"/>
@@ -95,8 +81,8 @@
             <Button x:Name="StartButton" Content="Start" Margin="10,8,10,62" FontSize="18" Padding="15,1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" IsDefault="True" Grid.Column="1" Grid.Row="1" Click="StartButton_Click"/>
             <Button x:Name="SettingsButton" Content="Settings" Margin="10,0,10,9" FontSize="18" Padding="15,1" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="48" VerticalAlignment="Bottom" Grid.Column="1" Grid.Row="1" Click="SettingsButton_Click"/>
             <TextBlock x:Name="DescrTextBlock" Margin="10,56,10,0" TextWrapping="Wrap" Text="TextBlock" Grid.ColumnSpan="3" Height="132" VerticalAlignment="Top" FontSize="14"/>
-            <Image x:Name="Image" Margin="0,0,10,9" Grid.Row="1" Grid.Column="2" Stretch="Fill" Source="Media/logo.png" HorizontalAlignment="Right" Width="257" Height="109" VerticalAlignment="Bottom"/>
-            <TextBlock x:Name="ServiceTextBox" Margin="10,193,10,10" TextWrapping="Wrap" Text="Information about processes" Grid.ColumnSpan="3" FontSize="18" TextAlignment="Center" TextDecorations="{x:Null}" FontFamily="Segoe UI Semibold"/>
+            <Image x:Name="image" Margin="0,0,10,9" Grid.Row="1" Grid.Column="2" Stretch="Fill" Source="Media/logo.png" HorizontalAlignment="Right" Width="257" Height="109" VerticalAlignment="Bottom"/>
+            <TextBlock x:Name="serviceTextBox" Margin="10,193,10,10" TextWrapping="Wrap" Text="Information about processes" Grid.ColumnSpan="3" FontSize="18" TextAlignment="Center" TextDecorations="{x:Null}" FontFamily="Segoe UI Semibold"/>
             <TextBlock x:Name="WelcomeTextBlock" Margin="10,10,10,0" TextWrapping="Wrap" Text="Welcome Text" VerticalAlignment="Top" Grid.ColumnSpan="3" Height="41" FontSize="22" FontWeight="Bold"/>
         </Grid>
     </Grid>
