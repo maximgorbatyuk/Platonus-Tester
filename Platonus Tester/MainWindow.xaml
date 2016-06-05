@@ -1,9 +1,10 @@
-﻿<Window x:Name="MainWindow1" x:Class="Platonus_Tester.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Platonus_Tester"
+        xmlns:Packaging="clr-namespace:System.IO.Packaging;assembly=PresentationCore" x:Name="MainWindow1" x:Class="Platonus_Tester.MainWindow"
         mc:Ignorable="d"
         Title="Platonus Tester" Height="521.053" Width="777.632" Icon="Media/icon.ico" Loaded="Window_Loaded" Initialized="MainWindow1_Initialized" WindowStartupLocation="CenterScreen" Background="WhiteSmoke">
     <Grid>
@@ -30,21 +31,30 @@
                 <ColumnDefinition Width="73*"/>
                 <ColumnDefinition Width="73*"/>
             </Grid.ColumnDefinitions>
-            <Border x:Name="border" Style="{StaticResource QuestionStyle}" Grid.ColumnSpan="5" Margin="10" Grid.RowSpan="2">
-
-            </Border>
-            <TextBlock x:Name="questionTextBlock" Margin="10" TextWrapping="Wrap" Text="TextBlock" FontSize="16" Grid.RowSpan="2" Grid.ColumnSpan="5" Foreground="Black"/>
+            <Border x:Name="border" Style="{StaticResource QuestionStyle}" Grid.ColumnSpan="5" Grid.RowSpan="2"/>
+            <TextBlock x:Name="questionTextBlock" Margin="10" TextWrapping="Wrap" Text="TextBlock" FontSize="16" Grid.RowSpan="2" Grid.ColumnSpan="5" Foreground="Black" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
             <Rectangle x:Name="Rc1"  Margin="10,10,10,8" Grid.Row="2" Fill="WhiteSmoke" Grid.ColumnSpan="3"/>
             <Rectangle x:Name="Rc2" Fill="#FFF4F4F5" Margin="10" Grid.Row="3" Grid.ColumnSpan="3"/>
             <Rectangle x:Name="Rc3" Fill="#FFF4F4F5" Margin="10" Grid.Row="4" Grid.ColumnSpan="3"/>
             <Rectangle x:Name="Rc4" Fill="WhiteSmoke" Margin="10" Grid.Row="5" Grid.ColumnSpan="3"/>
-            <RadioButton x:Name="RBVariant2" Content="Variant 2" Margin="10,10,55,10" Grid.Row="3" Grid.Column="0"
-                         BorderBrush="#FF403F3F" Background="{x:Null}" FontSize="16" Grid.ColumnSpan="3"/>
+            <RadioButton x:Name="RBVariant2"  Margin="10,10,55,10" Grid.Row="3" Grid.Column="0"
+				BorderBrush="#FF403F3F" Background="{x:Null}" FontSize="16" Grid.ColumnSpan="3">
+                <TextBlock x:Name="V2TextBlock" TextWrapping="Wrap" Text="TextBlock"/>
+            </RadioButton>
             <Rectangle x:Name="Rc5" Fill="#FFF4F4F5" Margin="10" Grid.Row="6" Grid.ColumnSpan="3"/>
-            <RadioButton x:Name="RBVariant1" Content="Variant 1" Margin="10,10,55,8" Grid.Row="2" BorderBrush="Black" Background="{x:Null}" FontSize="16" Foreground="Black" Grid.ColumnSpan="3" />
-            <RadioButton x:Name="RBVariant3" Content="Variant 3" Margin="10,10,55,10" Grid.Row="4" BorderBrush="#FF403F3F" Background="{x:Null}" FontSize="16" Grid.ColumnSpan="3"/>
-            <RadioButton x:Name="RBVariant4" Content="Variant 4" Margin="10,10,55,10" Grid.Row="5" BorderBrush="#FF403F3F" Background="{x:Null}" FontSize="16" Grid.ColumnSpan="3"/>
-            <RadioButton x:Name="RBVariant5" Content="Variant 5" Margin="10,10,55,10" Grid.Row="6" BorderBrush="#FF403F3F" Background="{x:Null}" FontSize="16" Grid.ColumnSpan="3"/>
+            <RadioButton x:Name="RbVariant1" Margin="10,10,10,8" Grid.Row="2" BorderBrush="Black" Background="{x:Null}" FontSize="16" Foreground="Black" Grid.ColumnSpan="3"
+				Grid.Column="0">
+                <TextBlock x:Name="V1TextBlock" TextWrapping="Wrap" Text="TextBlock"  UseLayoutRounding="False"/>
+            </RadioButton>
+            <RadioButton x:Name="RBVariant3"  Margin="10,10,55,10" Grid.Row="4" BorderBrush="#FF403F3F" Background="{x:Null}" FontSize="16" Grid.ColumnSpan="3">
+                <TextBlock x:Name="V3TextBlock" TextWrapping="Wrap" Text="TextBlock"/>
+            </RadioButton>
+            <RadioButton x:Name="RBVariant4"  Margin="10,10,55,10" Grid.Row="5" BorderBrush="#FF403F3F" Background="{x:Null}" FontSize="16" Grid.ColumnSpan="3">
+                <TextBlock x:Name="V4TextBlock" TextWrapping="Wrap" Text="TextBlock"/>
+            </RadioButton>
+            <RadioButton x:Name="RBVariant5" Margin="10,10,55,10" Grid.Row="6" BorderBrush="#FF403F3F" Background="{x:Null}" FontSize="16" Grid.ColumnSpan="3">
+                <TextBlock x:Name="V5TextBlock" TextWrapping="Wrap" Text="TextBlock"/>
+            </RadioButton>
 
             <Image x:Name="image1" Grid.Column="3" Margin="10,10,10,8" Grid.RowSpan="5" OpacityMask="#FFF1F1F1" Stretch="Fill" Grid.Row="2" Grid.ColumnSpan="2"/>
             <Button x:Name="NextButton" Content="Next" Margin="10,0,10,10" Click="NextButton_Click" Grid.Row="8" Grid.Column="1"/>

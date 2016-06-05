@@ -45,6 +45,7 @@ namespace Platonus_Tester
 
         private readonly List<RadioButton> _radioButtonsList;
         private readonly List<Rectangle> _recList;
+        private readonly List<TextBlock> _tbList;
 
 
         public MainWindow()
@@ -60,13 +61,13 @@ namespace Platonus_Tester
             SettingsButton.Content = Const.SettingsText;
             _radioButtonsList = new List<RadioButton>
             {
-                RBVariant1,
+                RbVariant1,
                 RBVariant2,
                 RBVariant3,
                 RBVariant4,
                 RBVariant5,
             };
-            RBVariant1.IsChecked = true;
+            RbVariant1.IsChecked = true;
             _recList = new List<Rectangle>
             {
                 Rc1,
@@ -74,6 +75,15 @@ namespace Platonus_Tester
                 Rc3,
                 Rc4,
                 Rc5,
+            };
+
+            _tbList = new List<TextBlock>
+            {
+                V1TextBlock,
+                V2TextBlock,
+                V3TextBlock,
+                V4TextBlock,
+                V5TextBlock,
             };
 
         }
@@ -210,10 +220,12 @@ namespace Platonus_Tester
                 var rec = _recList[i];
                 rb.Background = new SolidColorBrush(Const.LigthBackgroundColor);
                 rec.Fill = new SolidColorBrush(Const.LigthBackgroundColor );
-                rec.Fill = new SolidColorBrush(Const.LigthBackgroundColor );
+                //rec.Fill = new SolidColorBrush(Const.LigthBackgroundColor );
 
-                rb.Content = GetRandomItem(hash, i);
-                hash.Remove((string) rb.Content);
+                _tbList[i].Text = GetRandomItem(hash, i);
+                // rb.Content = GetRandomItem(hash, i);
+                // hash.Remove((string) rb.Content);
+                hash.Remove(_tbList[i].Text);
             }
             //---------------------------
         }
@@ -379,9 +391,10 @@ namespace Platonus_Tester
             //------------------------
             foreach (var rb in _radioButtonsList)
             {
+                var tb = (TextBlock) rb.Content;
                 if (rb.IsChecked ?? false)
                 {
-                    answer.ChosenAnswer = (string) rb.Content;
+                    answer.ChosenAnswer = tb.Text;
                 }
             }
             if (answer.ChosenAnswer == answer.CorrectAnswer)
@@ -416,14 +429,18 @@ namespace Platonus_Tester
             for (var index = 0; index < _radioButtonsList.Count; index++)
             {
                 var rb = _radioButtonsList[index];
-                var rec = _recList[index];
-                if ((string) rb.Content == _currentQuestion.CorrectAnswer)
+                var tb = (TextBlock)rb.Content;
+                if (tb.Text == _currentQuestion.CorrectAnswer)
                 {
-                    UInterfaceHelper.PaintBackColor(rec, true);
+                    UInterfaceHelper.PaintBackColor(_recList[index], true);
+                    
+                    //tb.Background = new SolidColorBrush(Const.CorrectColor);
+                    //_tbList[index].Background = new SolidColorBrush(Const.CorrectColor);
                 }
                 else if (rb.IsChecked ?? false)
                 {
-                    UInterfaceHelper.PaintBackColor(rec, false);
+                    UInterfaceHelper.PaintBackColor(_recList[index], false);
+                    //tb.Background = new SolidColorBrush(Const.IncorrectColor);
                 }
             }
         }
