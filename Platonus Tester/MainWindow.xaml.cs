@@ -43,8 +43,8 @@ namespace Platonus_Tester
         private Comment _goodComment, _badComment;
         private SourceFile _sourcefile = null;
 
-        private readonly List<RadioButton> _radioButtonsList;
-        private readonly List<Rectangle> _recList;
+        private readonly List<RadioButton> _rbList;
+        private readonly List<TextBlock> _varTbList;
 
 
         public MainWindow()
@@ -54,26 +54,26 @@ namespace Platonus_Tester
             Title = Const.ApplicationName;
             WelcomeTextBlock.Text = Const.WelcomeText;
             DescrTextBlock.Text = Const.DescriptionText;
-            serviceTextBox.Text = Const.InviteToLoadFile;
-            informationLabel.Content = "";
-            versionLabel.Content = $"Версия: {Const.Version}";
+            ServiceTextBox.Text = Const.InviteToLoadFile;
+            InformationLabel.Content = "";
+            VersionLabel.Content = $"Версия: {Const.Version}";
             SettingsButton.Content = Const.SettingsText;
-            _radioButtonsList = new List<RadioButton>
+            _rbList = new List<RadioButton>
             {
-                RBVariant1,
-                RBVariant2,
-                RBVariant3,
-                RBVariant4,
-                RBVariant5,
+                RbVariant1,
+                RbVariant2,
+                RbVariant3,
+                RbVariant4,
+                RbVariant5,
             };
-            RBVariant1.IsChecked = true;
-            _recList = new List<Rectangle>
+            RbVariant1.IsChecked = true;
+            _varTbList = new List<TextBlock>
             {
-                Rc1,
-                Rc2,
-                Rc3,
-                Rc4,
-                Rc5,
+                V1TextBlock,
+                V2TextBlock,
+                V3TextBlock,
+                V4TextBlock,
+                V5TextBlock,
             };
 
         }
@@ -124,7 +124,7 @@ namespace Platonus_Tester
             StartGrid.TranslatePoint(new Point(0, 0), MainWindow1);
             StartButton.Content = Const.LoadSourceFile;
             _settings = SettingsController.Load();
-            swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
+            SwearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
         }
 
         /// <summary>
@@ -142,20 +142,20 @@ namespace Platonus_Tester
             _currentQuestion = _questionManager.GetNext();
             _count += 1;
             LoadToLabels(_currentQuestion);
-            informationLabel.Content = $"Осталось вопросов: {_questionManager.GetCount()}";
+            InformationLabel.Content = $"Осталось вопросов: {_questionManager.GetCount()}";
 
-            swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
+            SwearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
             //
             var count = _questionManager.GetCount();
             if (count > 0)
             {
-                serviceTextBox.Text = $"Файл {source.FileName} загружен. Нажмите \"Начать\". Вопросов {count}";
+                ServiceTextBox.Text = $"Файл {source.FileName} загружен. Нажмите \"Начать\". Вопросов {count}";
                 _loadedFile = true;
                 StartButton.IsEnabled = true;
             }
             else
             {
-                serviceTextBox.Text = $"Возникли проблемы с обработкой вопросов";
+                ServiceTextBox.Text = $"Возникли проблемы с обработкой вопросов";
             }
             //--------------------------
             NextButton.Content = Const.NextQuestion;
@@ -183,8 +183,8 @@ namespace Platonus_Tester
             _sourcefile = e.ProcessingResult;
             if (_sourcefile.SourceText == null) return;
             StartButton.Content = Const.StartTesting;
-            progressBar.IsIndeterminate = false;
-            progressBar.Value = 0;
+            ProgressBar.IsIndeterminate = false;
+            ProgressBar.Value = 0;
             ProcessSourceFile(_sourcefile);
             
         }
@@ -193,24 +193,25 @@ namespace Platonus_Tester
         private void LoadToLabels(Question test)
         {
             if (test == null) return;
-            questionTextBlock.Text = test.AskQuestion;
+            QuestionTextBlock.Text = test.AskQuestion;
 
             if (test.Picture != null)
             {
-                image1.Source = UInterfaceHelper.GetImageSource(test.Picture);
+                Image1.Source = UInterfaceHelper.GetImageSource(test.Picture);
             }
-            image1.Visibility = test.Picture != null ? Visibility.Visible : Visibility.Hidden;
+            Image1.Visibility = test.Picture != null ? Visibility.Visible : Visibility.Hidden;
 
             var hash = new List<string>(0);
             hash.AddRange(test.AnswerList);
             //-----------------
-            for (var i = 0; i < _radioButtonsList.Count; i++)
+            for (var i = 0; i < _rbList.Count; i++)
             {
-                var rb = _radioButtonsList[i];
-                var rec = _recList[i];
+                var rb = _rbList[i];
+                var tb = _varTbList[i];
                 rb.Background = new SolidColorBrush(Const.LigthBackgroundColor);
-                rec.Fill = new SolidColorBrush(Const.LigthBackgroundColor );
-                rec.Fill = new SolidColorBrush(Const.LigthBackgroundColor );
+
+                tb.Background = new SolidColorBrush(Const.LigthBackgroundColor );
+                tb.Background = new SolidColorBrush(Const.LigthBackgroundColor );
 
                 rb.Content = GetRandomItem(hash, i);
                 hash.Remove((string) rb.Content);
@@ -280,16 +281,16 @@ namespace Platonus_Tester
 
         private void LoadSettings()
         {
-            serviceTextBox.Background = new SolidColorBrush( Const.LigthBackgroundColor );
+            ServiceTextBox.Background = new SolidColorBrush( Const.LigthBackgroundColor );
             _settings = SettingsController.Load();
             _answered = new List<AnsweredQuestion>(0);
             StartGrid.Visibility = Visibility.Visible;
             if (_fileName == "") return;
 
             StartButton.IsEnabled = false;
-            progressBar.Value = 0;
+            ProgressBar.Value = 0;
             _sourceController.ProcessSourceFileAsync(_fileName);
-            swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
+            SwearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
         }
 
         /// <summary>
@@ -298,7 +299,7 @@ namespace Platonus_Tester
         /// <param name="dragname"></param>
         private void OpenFile(string dragname = null)
         {
-            serviceTextBox.Background = new SolidColorBrush( Const.LigthBackgroundColor );
+            ServiceTextBox.Background = new SolidColorBrush( Const.LigthBackgroundColor );
             if (dragname == null)
             {
                 var openFileDialog1 = new OpenFileDialog
@@ -318,12 +319,12 @@ namespace Platonus_Tester
             }
             if (!ValidateFilename(_fileName))
             {
-                serviceTextBox.Text = Const.WrongFilename;
+                ServiceTextBox.Text = Const.WrongFilename;
                 return;
             }
-            serviceTextBox.Text = Const.FileProcessing;
-            progressBar.IsIndeterminate = true;
-            progressBar.Visibility = Visibility.Visible;
+            ServiceTextBox.Text = Const.FileProcessing;
+            ProgressBar.IsIndeterminate = true;
+            ProgressBar.Visibility = Visibility.Visible;
             //UInterfaceHelper.SetText(serviceTextBox, Const.FileProcessing);
             LoadSettings();
         }
@@ -342,8 +343,8 @@ namespace Platonus_Tester
 
         private void StartGrid_DragEnter(object sender, DragEventArgs e)
         {
-            serviceTextBox.Text = Const.DraggingFiles;
-            serviceTextBox.Background = new SolidColorBrush( Const.LigthBlack );
+            ServiceTextBox.Text = Const.DraggingFiles;
+            ServiceTextBox.Background = new SolidColorBrush( Const.LigthBlack );
             e.Effects = e.Data.GetDataPresent(DataFormats.FileDrop) ?
                 DragDropEffects.Move :
                 DragDropEffects.None;
@@ -377,7 +378,7 @@ namespace Platonus_Tester
                 CorrectAnswer = _currentQuestion.CorrectAnswer
             };
             //------------------------
-            foreach (var rb in _radioButtonsList)
+            foreach (var rb in _rbList)
             {
                 if (rb.IsChecked ?? false)
                 {
@@ -399,9 +400,9 @@ namespace Platonus_Tester
             }
             StartGrid.Visibility = Visibility.Visible;
             _loadedFile = false;
-            serviceTextBox.Text = Const.InviteToLoadFile;
+            ServiceTextBox.Text = Const.InviteToLoadFile;
             StartButton.Content = Const.LoadSourceFile;
-            informationLabel.Content = "";
+            InformationLabel.Content = "";
         }
 
         private void SettingsMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -413,18 +414,18 @@ namespace Platonus_Tester
         {
             if (_currentQuestion == null) return;
 
-            for (var index = 0; index < _radioButtonsList.Count; index++)
+            for (var index = 0; index < _rbList.Count; index++)
             {
-                var rb = _radioButtonsList[index];
-                var rec = _recList[index];
-                if ((string) rb.Content == _currentQuestion.CorrectAnswer)
-                {
-                    UInterfaceHelper.PaintBackColor(rec, true);
-                }
-                else if (rb.IsChecked ?? false)
-                {
-                    UInterfaceHelper.PaintBackColor(rec, false);
-                }
+                    var rb = _rbList[index];
+                    var text = (string)rb.Content;
+                    if (text == _currentQuestion.CorrectAnswer)
+                    {
+                        UInterfaceHelper.PaintBackColor(_varTbList[index], true);
+                    }
+                    else if (rb.IsChecked ?? false)
+                    {
+                        UInterfaceHelper.PaintBackColor(_varTbList[index], false);
+                    }
             }
         }
 
@@ -439,7 +440,7 @@ namespace Platonus_Tester
             count = count > 0 ? count: 1;
             var pValue = (double)position / count * 100;
             pValue = pValue > 100 ? 100 : pValue;
-            progressBar.Value = pValue;
+            ProgressBar.Value = pValue;
         }
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
@@ -448,7 +449,7 @@ namespace Platonus_Tester
             if (_answered.Count == _questionManager.GetFirstListCount())
             {
                 _settings = SettingsController.Load();
-                swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
+                SwearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
                 FinishTesting();
             }
             else
@@ -457,7 +458,7 @@ namespace Platonus_Tester
                 _currentQuestion = _questionManager.GetNext();
                 LoadToLabels(_currentQuestion);
                 DisplayProgress(_questionManager.GetCurrentPosition());
-                informationLabel.Content = $"Осталось вопросов: {_questionManager.GetCount() - _answered.Count}";
+                InformationLabel.Content = $"Осталось вопросов: {_questionManager.GetCount() - _answered.Count}";
                 if (_answered.Count == _questionManager.GetCount())
                 {
                     NextButton.Content = Const.ShowResult;
@@ -468,8 +469,8 @@ namespace Platonus_Tester
         private void StartAgainMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             if (_fileName == "") return;
-            UInterfaceHelper.SetText(informationLabel, "");
-            UInterfaceHelper.SetText(serviceTextBox, Const.FileProcessing);
+            UInterfaceHelper.SetText(InformationLabel, "");
+            UInterfaceHelper.SetText(ServiceTextBox, Const.FileProcessing);
             LoadSettings();
             // throw new NotImplementedException();
         }
