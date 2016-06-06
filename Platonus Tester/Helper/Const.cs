@@ -31,7 +31,7 @@ namespace Platonus_Tester.Helper
         public static readonly string DraggingFiles = "Захватываю файл";
         public static readonly string FileProcessing = "Загружается файл. Это может занять некоторое время";
         public static readonly string ShowResult = "Показать результат";
-        public static readonly string SwearsEnabled = "Включено отображение ругательств. Вы сами этого хотите";
+        public static readonly string SwearsEnabled = "Ругательства включены. Так желает юзер";
         public static readonly string SwearsDisabled = "Ругательства выключены";
         public static readonly string NextQuestion = "Следующий вопрос";
         public static readonly string WrongFilename = "Неверный формат файла";
@@ -39,6 +39,9 @@ namespace Platonus_Tester.Helper
         public static readonly string CheckThis = "Проверить";
         public static readonly string ProcessingProblem = $"Возникли проблемы с обработкой вопросов";
         public static readonly string ResultTitle = "Результаты тестирования";
+
+        public static readonly string LimitEnabled = "Лимит включен";
+        public static readonly string LimitDisabled = "Все вопросы";
 
         public static string TEST_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Platonus-Tester/master/Platonus%20Tester/HashSource/test.txt";
         public static string HASH_100_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Platonus-Tester/master/Platonus%20Tester/HashSource/hash_100.txt";
@@ -64,17 +67,11 @@ namespace Platonus_Tester.Helper
         public static readonly string PickAnAnswer      = "Выберите вопрос для просмотра";
 
         public static readonly string Enabled = "Вкл";
-
         public static readonly string Disabled = "Выкл";
-
         public static readonly string LimitEnableText = "Установить лимит вопросов (не все вопросы будут выведены)";
-
         public static readonly string LimitCountSet = "Установить число лимита вопросов";
-
         public static readonly string ShowSwearEnableText = "Показывать ругательства ;) в комментариях";
-
         public static readonly string DownloadSwearEnableText = "Загружать ругательства ;) из GitHub";
-
         public static readonly string ColorChemeEnabledText = "Светлая цветовая схема";
         public static readonly string SettingsText = "Настройки";
     }

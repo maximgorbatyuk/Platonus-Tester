@@ -56,8 +56,8 @@ namespace Platonus_Tester
             WelcomeTextBlock.Text = Const.WelcomeText;
             DescrTextBlock.Text = Const.DescriptionText;
             serviceTextBox.Text = Const.InviteToLoadFile;
-            informationLabel.Content = "";
-            versionLabel.Content = $"Версия: {Const.Version}";
+            InformationLabel.Content = "";
+            VersionLabel.Content = $"Версия: {Const.Version}";
             SettingsButton.Content = Const.SettingsText;
             _radioButtonsList = new List<RadioButton>
             {
@@ -134,7 +134,8 @@ namespace Platonus_Tester
             StartGrid.TranslatePoint(new Point(0, 0), MainWindow1);
             StartButton.Content = Const.LoadSourceFile;
             _settings = SettingsController.Load();
-            swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
+            SwearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
+            LimitLabel.Content = _settings.EnableLimit ? Const.LimitEnabled : Const.LimitDisabled;
         }
 
         /// <summary>
@@ -152,9 +153,13 @@ namespace Platonus_Tester
             _currentQuestion = _questionManager.GetNext();
             _count += 1;
             LoadToLabels(_currentQuestion);
-            informationLabel.Content = $"Осталось вопросов: {_questionManager.GetCount()}";
+            var remain = !_settings.EnableLimit ?
+                    _questionManager.GetCount() - _answered.Count :
+                    _settings.QuestionLimitCount - _answered.Count;
 
-            swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
+            InformationLabel.Content = $"Осталось {remain} вопр.";
+            LimitLabel.Content = _settings.EnableLimit ? Const.LimitEnabled : Const.LimitDisabled;
+            SwearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
             //
             var count = _questionManager.GetCount();
             if (count > 0)
@@ -301,7 +306,8 @@ namespace Platonus_Tester
             StartButton.IsEnabled = false;
             progressBar.Value = 0;
             _sourceController.ProcessSourceFileAsync(_fileName);
-            swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
+            LimitLabel.Content = _settings.EnableLimit ? Const.LimitEnabled : Const.LimitDisabled;
+            SwearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
         }
 
         /// <summary>
@@ -374,7 +380,16 @@ namespace Platonus_Tester
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            new SettingsForm().ShowDialog();
+            var settingsView = new SettingsForm();
+            settingsView.Closed += SettingsViewOnClosed;
+            settingsView.ShowDialog();            
+        }
+
+        private void SettingsViewOnClosed(object sender, EventArgs eventArgs)
+        {
+            _settings = SettingsController.Load();
+            LimitLabel.Content = _settings.EnableLimit ? Const.LimitEnabled : Const.LimitDisabled;
+            SwearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
         }
 
         /// <summary>
@@ -383,6 +398,7 @@ namespace Platonus_Tester
         /// </summary>
         private void CheckQuestion()
         {
+            if (_currentQuestion == null) return;
             var answer = new AnsweredQuestion
             {
                 AskQuestion = _currentQuestion.AskQuestion,
@@ -392,15 +408,12 @@ namespace Platonus_Tester
             foreach (var rb in _radioButtonsList)
             {
                 var tb = (TextBlock) rb.Content;
-                if (rb.IsChecked ?? false)
+                if (rb.IsChecked != null && rb.IsChecked.Value)
                 {
                     answer.ChosenAnswer = tb.Text;
                 }
             }
-            if (answer.ChosenAnswer == answer.CorrectAnswer)
-            {
-                answer.IsItCorrect = true;
-            }
+            answer.IsItCorrect = answer.ChosenAnswer == answer.CorrectAnswer;
             _answered.Add(answer);
         }
 
@@ -414,7 +427,7 @@ namespace Platonus_Tester
             _loadedFile = false;
             serviceTextBox.Text = Const.InviteToLoadFile;
             StartButton.Content = Const.LoadSourceFile;
-            informationLabel.Content = "";
+            InformationLabel.Content = "";
         }
 
         private void SettingsMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -452,7 +465,7 @@ namespace Platonus_Tester
         /// <param name="position"></param>
         private void DisplayProgress(int position)
         {
-            var count = _questionManager.GetCount();
+            var count = _settings.EnableLimit ? _settings.QuestionLimitCount : _questionManager.GetCount();
             count = count > 0 ? count: 1;
             var pValue = (double)position / count * 100;
             pValue = pValue > 100 ? 100 : pValue;
@@ -461,11 +474,12 @@ namespace Platonus_Tester
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
-            
-            if (_answered.Count == _questionManager.GetFirstListCount())
+            var cond = _answered.Count == _questionManager.GetFirstListCount() ||
+                       _answered.Count == _settings.QuestionLimitCount;
+            if (cond)
             {
-                _settings = SettingsController.Load();
-                swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
+                //_settings = SettingsController.Load();
+                //swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
                 FinishTesting();
             }
             else
@@ -474,8 +488,14 @@ namespace Platonus_Tester
                 _currentQuestion = _questionManager.GetNext();
                 LoadToLabels(_currentQuestion);
                 DisplayProgress(_questionManager.GetCurrentPosition());
-                informationLabel.Content = $"Осталось вопросов: {_questionManager.GetCount() - _answered.Count}";
-                if (_answered.Count == _questionManager.GetCount())
+
+                var remain = !_settings.EnableLimit ? 
+                    _questionManager.GetCount() - _answered.Count : 
+                    _settings.QuestionLimitCount - _answered.Count;
+
+                InformationLabel.Content = $"Осталось вопросов: {remain}";
+
+                if (remain == 0)
                 {
                     NextButton.Content = Const.ShowResult;
                 }
@@ -485,7 +505,7 @@ namespace Platonus_Tester
         private void StartAgainMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             if (_fileName == "") return;
-            UInterfaceHelper.SetText(informationLabel, "");
+            UInterfaceHelper.SetText(InformationLabel, "");
             UInterfaceHelper.SetText(serviceTextBox, Const.FileProcessing);
             LoadSettings();
             // throw new NotImplementedException();

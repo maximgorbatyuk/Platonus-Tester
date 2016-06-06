@@ -73,9 +73,10 @@
             <MenuItem x:Name="AboutMenuItem" Header="О программе" Click="AboutMenuItem_Click"/>
         </Menu>
         <StatusBar Height="35" VerticalAlignment="Bottom" Background="Gainsboro">
-            <Label x:Name="versionLabel" Content="Version"/>
-            <Label x:Name="swearLabel" Content="Swear Mode"/>
-            <Label x:Name="informationLabel" Content="Information"/>
+            <Label x:Name="VersionLabel" Content="Version"/>
+            <Label x:Name="SwearLabel" Content="Swear Mode"/>
+            <Label x:Name="InformationLabel" Content="Information"/>
+            <Label x:Name="LimitLabel" Content="LimitLabel"/>
         </StatusBar>
         <ProgressBar x:Name="progressBar" Margin="0,0,10,8" Height="18" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="173"/>
         <Grid x:Name="StartGrid" Margin="10,34,10,40" AllowDrop="True" DragOver="StartGrid_OnDragOver" Drop="StartGrid_OnDrop" DragEnter="StartGrid_DragEnter" Background="WhiteSmoke" >

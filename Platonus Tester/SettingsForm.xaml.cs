@@ -63,10 +63,10 @@ namespace Platonus_Tester
             }
             var settings = new Settings
             {
-                EnableLimit = LimitEnableCheckBox.IsEnabled,
-                ShowSwearing = ShowSwearsCheckBox.IsEnabled,
-                DownloadSwears = DownloadSwearsCheckBox.IsEnabled,
-                LightColorScheme = ColorSchemeCheckBox.IsEnabled,
+                EnableLimit = LimitEnableCheckBox.IsChecked != null && LimitEnableCheckBox.IsChecked.Value,
+                ShowSwearing = ShowSwearsCheckBox.IsChecked != null && ShowSwearsCheckBox.IsChecked.Value,
+                DownloadSwears = DownloadSwearsCheckBox.IsChecked != null && DownloadSwearsCheckBox.IsChecked.Value,
+                LightColorScheme = ColorSchemeCheckBox.IsChecked != null && ColorSchemeCheckBox.IsChecked.Value,
                 QuestionLimitCount = limitCount
             };
             SettingsController.SaveSettings(settings);
@@ -88,6 +88,7 @@ namespace Platonus_Tester
             var cb = (CheckBox) sender;
             try
             {
+                if (cb.IsChecked == null) return;
                 cb.Content = cb.IsChecked.Value ? Const.Enabled : Const.Disabled;
             }
             catch
