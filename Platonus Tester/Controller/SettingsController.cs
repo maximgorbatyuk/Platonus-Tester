@@ -18,7 +18,8 @@ namespace Platonus_Tester.Controller
         /// <param name="settings"></param>
         public static void SaveSettings(Settings settings)
         {
-            var fileName = $"{Environment.CurrentDirectory}\\settings.xml";
+            //var path = Environment.SpecialFolder.ApplicationData;
+            var fileName = $"C:\\ProgramData\\settings.xml";
             StreamWriter stream = null;
             try
             {
@@ -42,7 +43,8 @@ namespace Platonus_Tester.Controller
         /// <returns></returns>
         public static Settings Load()
         {
-            var fileName = $"{Environment.CurrentDirectory}\\settings.xml";
+            //var path = Environment.SpecialFolder.ApplicationData;
+            var fileName = $"C:\\ProgramData\\settings.xml";
             Settings settings = null;
             StreamReader stream = null;
             try
