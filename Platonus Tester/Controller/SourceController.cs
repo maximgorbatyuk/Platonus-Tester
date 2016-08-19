@@ -72,15 +72,14 @@ namespace Platonus_Tester.Controller
         {
             _fileName = (string) e.Argument;
             SourceFile file = null;
-            if (_fileName.IndexOf(".txt", StringComparison.Ordinal) > -1)
+            if (_fileName.Contains(".txt"))
             {
                 file =  GetTXT(_fileName);
                 //DefineResult(GetTXT(_fileName));
             }
 
-            if (_fileName.IndexOf(".docx", StringComparison.Ordinal) > -1 ||
-                _fileName.IndexOf(".doc", StringComparison.Ordinal) > -1
-                )
+            if (_fileName.Contains(".docx") ||
+                _fileName.Contains(".doc") )
             {
                 file = GetDocXText(_fileName);
                 //DefineResult(GetDocXText(_fileName));
@@ -114,6 +113,7 @@ namespace Platonus_Tester.Controller
             finally
             {
                 reader?.Close();
+                reader?.Dispose();
             }
             return new SourceFile(text, null);
         }

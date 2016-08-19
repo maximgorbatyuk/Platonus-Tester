@@ -122,6 +122,12 @@
             Класс для управления настройками. Настройки записываются в XML формате в файл в той же директории
             </summary>
         </member>
+        <member name="M:Platonus_Tester.Controller.SettingsController.SaveSettings(Platonus_Tester.Helper.Settings)">
+            <summary>
+            
+            </summary>
+            <param name="settings"></param>
+        </member>
         <member name="M:Platonus_Tester.Controller.SettingsController.Load">
             <summary>
             Загрузка настроек из файла. Если происходит ошибка, возвращаются станлартные настройки
