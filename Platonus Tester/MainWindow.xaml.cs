@@ -196,7 +196,13 @@ namespace Platonus_Tester
         private void OnSourceLoaded(object sender, SourceFileLoadedArgs e)
         {
             _sourcefile = e.ProcessingResult;
-            if (_sourcefile.SourceText == null) return;
+            if (_sourcefile?.SourceText == null)
+            {
+                serviceTextBox.Text = Const.InviteToLoadFile;
+                StartButton.IsEnabled = true;
+                //StartButton.Content = "Поместите файл в окно";
+                return;
+            }
             StartButton.Content = Const.StartTesting;
             progressBar.IsIndeterminate = false;
             progressBar.Value = 0;
@@ -321,7 +327,8 @@ namespace Platonus_Tester
             {
                 var openFileDialog1 = new OpenFileDialog
                 {
-                    InitialDirectory = Directory.GetCurrentDirectory(),
+                    //InitialDirectory = Directory.GetCurrentDirectory(),
+                    InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
                     FilterIndex = 2,
                     RestoreDirectory = true
                 };
@@ -375,7 +382,7 @@ namespace Platonus_Tester
         private void AboutMenuItem_Click(object sender, RoutedEventArgs e)
         {
             Process.Start(
-                "https://github.com/maximgorbatyuk/Platonus-Tester/");
+                "https://github.com/maximgorbatyuk/Platonus-Tester/#platonus-tester");
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
@@ -475,7 +482,7 @@ namespace Platonus_Tester
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
             var cond = _answered.Count == _questionManager.GetFirstListCount() ||
-                       _answered.Count == _settings.QuestionLimitCount;
+                       (_answered.Count == _settings.QuestionLimitCount && _settings.EnableLimit == true);
             if (cond)
             {
                 //_settings = SettingsController.Load();

@@ -41,7 +41,7 @@
   <ItemGroup>
     <Reference Include="DocX, Version=1.0.0.22, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Test-Unit-Project\SessionTestUnit\bin\Debug\DocX.dll</HintPath>
+      <HintPath>bin\Release\DocX.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

@@ -51,9 +51,10 @@ namespace Platonus_Tester
                     _rigth++;
                 }
             }
+            TextBlock_AnswerCount.Text = $"Всего вопросов: {_hash.Count}. Отмечено верно: {_rigth}";
             var result = (double)_rigth / _hash.Count;
             result = result * 100;
-            commentTextBlock.Text = $"Ваш результат: {result.ToString("#.##")}%\n{GetComment(result)}";
+            commentTextBlock.Text = $"Ваш результат: {result:#.##}%\n{GetComment(result)}";
             LoadListBox(_hash);
         }
 

@@ -2,7 +2,7 @@
 <Settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <EnableLimit>false</EnableLimit>
   <ShowSwearing>false</ShowSwearing>
-  <DownloadSwears>true</DownloadSwears>
+  <DownloadSwears>false</DownloadSwears>
   <LightColorScheme>false</LightColorScheme>
   <QuestionLimitCount>25</QuestionLimitCount>
 </Settings>

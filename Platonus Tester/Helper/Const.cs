@@ -63,7 +63,7 @@ namespace Platonus_Tester.Helper
         public static readonly Color CorrectColor = Color.FromArgb(255, 144, 232, 121);
         public static readonly Color IncorrectColor = Color.FromArgb(255, 233, 107, 107);
 
-        public static readonly string InviteToLoadFile  = "Перетяните файл в окно";
+        public static readonly string InviteToLoadFile  = "Поместите файл в окно";
         public static readonly string PickAnAnswer      = "Выберите вопрос для просмотра";
 
         public static readonly string Enabled = "Вкл";

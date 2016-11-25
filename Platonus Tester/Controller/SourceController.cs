@@ -124,17 +124,25 @@ namespace Platonus_Tester.Controller
         /// </summary>
         private SourceFile GetDocXText(string filename)
         {
-            var document = DocX.Load(filename);
-            var text = "";
-            text = ReplaceImages(text, document);
-            text = ReplaceTables(text, document);
-            //
-            var images = document.Images;
-            text = text.Replace("<question>", "\r\n<question>");
-            text = text.Replace("<variant>", "\r\n<variant>");
+            try
+            {
+                var document = DocX.Load(filename);
+                var text = "";
+                text = ReplaceImages(text, document);
+                text = ReplaceTables(text, document);
+                //
+                var images = document.Images;
+                text = text.Replace("<question>", "\r\n<question>");
+                text = text.Replace("<variant>", "\r\n<variant>");
 
 
-            return new SourceFile(text, images);
+                return new SourceFile(text, images);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Возникла ошибка при открытии файла:\n{ex.Message}");
+            }
+            return null;
         }
 
         private List<Image> ConvertImages(IEnumerable<Novacode.Picture> pictures, IEnumerable<Novacode.Image> images)
