@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <EnableLimit>false</EnableLimit>
-  <ShowSwearing>false</ShowSwearing>
-  <DownloadSwears>false</DownloadSwears>
+  <ShowSwearing>true</ShowSwearing>
+  <DownloadSwears>true</DownloadSwears>
   <LightColorScheme>false</LightColorScheme>
   <QuestionLimitCount>25</QuestionLimitCount>
 </Settings>
