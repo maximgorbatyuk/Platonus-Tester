@@ -5,14 +5,16 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using Platonus_Tester.Model;
+using System.Linq;
+using Platest.Interfaces;
+using Platest.Models;
 
-namespace Platonus_Tester.Helper
+namespace Platest.Helpers
 {
     /// <summary>
     /// Класс-кор проекта. Обработчик текста вопросов в хэш вопросов-объектов
     /// </summary>
-    public class QuestionProcessor
+    public class QuestionProcessor : IQuestionProvider
     {
         private SourceFile _file;
         private List<string> _errorList;
@@ -79,6 +81,7 @@ namespace Platonus_Tester.Helper
             return result;
         }
 
+        public const string MissingVariant = "Ошибка: отсутствует вариант ответа";
         /// <summary>
         /// Функция, возвращающая тестовый вопрос
         /// </summary>
@@ -125,7 +128,7 @@ namespace Platonus_Tester.Helper
 
                 for (var i = hash.Count; i < 5; i++)
                 {
-                    hash.Add(Const.MissingVariant);
+                    hash.Add(MissingVariant);
                 }
 
                 var result = new TestQuestion
@@ -183,12 +186,12 @@ namespace Platonus_Tester.Helper
         /// <param name="word">Искомое слово</param>
         /// <param name="source">Текст, в котором ищется слово</param>
         /// <returns>Количество вхождений</returns>
-        public int GetWordCount(string word, string source)
+        private int GetWordCount(string word, string source)
         {
             return (source.Length - source.Replace(word, "").Length) / word.Length;
         }
 
-        public List<string> GetErrors()
+        public IEnumerable<string> GetErrors()
         {
             if (_errorList == null || _errorList.Count <= 0) return null;
             var tmp = _errorList;

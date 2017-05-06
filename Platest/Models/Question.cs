@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Image = System.Drawing.Image;
+using System.Drawing;
 
-namespace Platonus_Tester.Model
+namespace Platest.Models
 {
     /// <summary>
     /// Класс-предок для отвеченного вопроса и незаданного

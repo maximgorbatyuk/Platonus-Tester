@@ -26,7 +26,7 @@ namespace Platonus_Tester.Helper
         public static readonly string WelcomeText = "Добро пожаловать в программу тестирования";
         public static readonly string LoadSourceFile = "Загрузить тест";
         public static readonly string StartTesting = "Начать тест";
-        public static readonly string CheckQuestion = "Проверить тест";
+        public static readonly string CheckQuestion = "Проверить вопрос";
         public static readonly string ProgrammSetings = "Настройки программы";
         public static readonly string DraggingFiles = "Захватываю файл";
         public static readonly string FileProcessing = "Загружается файл. Это может занять некоторое время";
@@ -35,23 +35,13 @@ namespace Platonus_Tester.Helper
         public static readonly string SwearsDisabled = "Ругательства выключены";
         public static readonly string NextQuestion = "Следующий вопрос";
         public static readonly string WrongFilename = "Неверный формат файла";
-        public static readonly string MissingVariant = "Ошибка: отсутствует вариант ответа";
+        // public static readonly string MissingVariant = "Ошибка: отсутствует вариант ответа";
         public static readonly string CheckThis = "Проверить";
         public static readonly string ProcessingProblem = $"Возникли проблемы с обработкой вопросов";
         public static readonly string ResultTitle = "Результаты тестирования";
 
         public static readonly string LimitEnabled = "Лимит включен";
         public static readonly string LimitDisabled = "Все вопросы";
-
-        public static string TEST_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Platonus-Tester/master/Platonus%20Tester/HashSource/test.txt";
-        public static string HASH_100_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Platonus-Tester/master/Platonus%20Tester/HashSource/hash_100.txt";
-        public static string HASH_90_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Platonus-Tester/master/Platonus%20Tester/HashSource/hash_90.txt";
-        public static string HASH_75_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Platonus-Tester/master/Platonus%20Tester/HashSource/hash_75.txt";
-        public static string HASH_60_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Platonus-Tester/master/Platonus%20Tester/HashSource/hash_60.txt";
-        public static string HASH_50_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Platonus-Tester/master/Platonus%20Tester/HashSource/hash_50.txt";
-        public static string HASH_0_URL = "https://raw.githubusercontent.com/maximgorbatyuk/Platonus-Tester/master/Platonus%20Tester/HashSource/hash_0.txt";
-
-
         
         public static readonly Color LigthBlack = Color.FromArgb(118, 0, 0, 0);
         public static readonly Color LigthBackgroundColor = Color.FromArgb(255, 245, 245, 245);

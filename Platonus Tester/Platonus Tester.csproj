@@ -85,16 +85,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Comments\Comment.cs" />
-    <Compile Include="Comments\Swear.cs" />
-    <Compile Include="Controller\DownloadController.cs" />
-    <Compile Include="Controller\QuestionController.cs" />
     <Compile Include="Controller\SettingsController.cs" />
-    <Compile Include="Controller\SourceController.cs" />
-    <Compile Include="CustomArgs\SourceFileLoadedArgs.cs" />
     <Compile Include="Helper\Const.cs" />
-    <Compile Include="Helper\QuestionProcessor.cs" />
-    <Compile Include="Helper\SwearHashProcessor.cs" />
     <Compile Include="Helper\UInterfaceHelper.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -110,11 +102,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\AnsweredQuestion.cs" />
-    <Compile Include="Model\Question.cs" />
     <Compile Include="Helper\Settings.cs" />
-    <Compile Include="Model\SourceFile.cs" />
-    <Compile Include="Model\TestQuestion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -145,7 +133,16 @@
   <ItemGroup>
     <Resource Include="Media\icon.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Platest\Platest.csproj">
+      <Project>{A41424E6-309B-4F20-9988-DE56038A02B6}</Project>
+      <Name>Platest</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ResultComments\ResultComments.csproj">
+      <Project>{83D12892-8383-44B3-BC52-585C6909ECBF}</Project>
+      <Name>ResultComments</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Media\logo.png" />
   </ItemGroup>

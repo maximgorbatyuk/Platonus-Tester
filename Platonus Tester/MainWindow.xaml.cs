@@ -17,21 +17,22 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Microsoft.Win32;
-using Platonus_Tester.Comments;
 using Platonus_Tester.Controller;
-using Platonus_Tester.CustomArgs;
 using Platonus_Tester.Helper;
-using Platonus_Tester.Model;
+using Platest.Controllers;
+using Platest.Interfaces;
+using Platest.Models;
+using ResultComments.Models;
 
 namespace Platonus_Tester
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, ISourceLoadListener
     {
 
-        private QuestionController  _questionManager;
+        private IQuestionManager _questionManager;
         private TestQuestion        _currentQuestion;
         private List<AnsweredQuestion> _answered;
         private int _count;
@@ -108,7 +109,12 @@ namespace Platonus_Tester
         {
             if (!e.Data.GetDataPresent(DataFormats.FileDrop)) return;
 
-            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            var files = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (files == null)
+            {
+                return;
+            }
+
             if (files.Length <= 0) return;
             OpenFile(files[0]);
         }
@@ -117,15 +123,13 @@ namespace Platonus_Tester
         {
             e.Effects = DragDropEffects.Move;
             e.Handled = true;
-            // throw new NotImplementedException();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            _questionManager    = new QuestionController();
+            _questionManager    = new QuestionManager();
            // _settings           = SettingsController.Load();
-            _sourceController   = new SourceController();
-            _sourceController.OnLoadComleted += OnSourceLoaded;
+            _sourceController   = new SourceController(this);
 
             _goodComment = new Comment();
             _badComment = new Swear();
@@ -153,9 +157,9 @@ namespace Platonus_Tester
             _currentQuestion = _questionManager.GetNext();
             _count += 1;
             LoadToLabels(_currentQuestion);
-            var remain = !_settings.EnableLimit ?
-                    _questionManager.GetCount() - _answered.Count :
-                    _settings.QuestionLimitCount - _answered.Count;
+            var remain = !_settings.EnableLimit
+                ? _questionManager.GetCount() - _answered.Count
+                : _settings.QuestionLimitCount - _answered.Count;
 
             InformationLabel.Content = $"Осталось {remain} вопр.";
             LimitLabel.Content = _settings.EnableLimit ? Const.LimitEnabled : Const.LimitDisabled;
@@ -177,39 +181,12 @@ namespace Platonus_Tester
             CheckButton.Content = Const.CheckQuestion;
             //UInterfaceHelper.SetProgressValue(progressBar, 100);
 
-            var errors = _questionManager.Errors;
+            var errors = _questionManager.GetErrors();
             if (errors != null)
             {
-                new ErrorWindow(errors).ShowDialog();
-            }
-            if (_settings.DownloadSwears)
-            {
-                await StartGettingHashesAsync();
+                new ErrorWindow(errors.ToList()).ShowDialog();
             }
         }
-
-        /// <summary>
-        /// Listener, слушающий окончание обработки документа
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnSourceLoaded(object sender, SourceFileLoadedArgs e)
-        {
-            _sourcefile = e.ProcessingResult;
-            if (_sourcefile?.SourceText == null)
-            {
-                serviceTextBox.Text = Const.InviteToLoadFile;
-                StartButton.IsEnabled = true;
-                //StartButton.Content = "Поместите файл в окно";
-                return;
-            }
-            StartButton.Content = Const.StartTesting;
-            progressBar.IsIndeterminate = false;
-            progressBar.Value = 0;
-            ProcessSourceFile(_sourcefile);
-            
-        }
-
 
         private void LoadToLabels(Question test)
         {
@@ -245,48 +222,6 @@ namespace Platonus_Tester
         {
             var random = new Random(DateTime.Now.Millisecond + i);
             return hash[random.Next(hash.Count)];
-        }
-
-
-        private async Task StartGettingHashesAsync()
-        {
-            foreach (var h in new List<string>
-            {
-                Const.HASH_100_URL,
-                Const.HASH_90_URL,
-                Const.HASH_75_URL,
-                Const.HASH_60_URL,
-                Const.HASH_50_URL,
-                Const.HASH_0_URL
-            })
-            {
-                await GetHashListAsync(h);
-            }
-        }
-
-        /// <summary>
-        /// Получение списков ругательств в фоновом процессе
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        private async Task GetHashListAsync(string url)
-        {
-            try
-            {
-                if (!DownloadController.CheckForInternetConnection()) return;
-                var result = await DownloadController.ExecuteRequestAsync(url);
-                if (result == null) return;
-
-                var array = SwearHashProcessor.GetHashList(result);
-                if (array.Count > 0)
-                {
-                    _badComment.AddHashList(url, array);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
@@ -526,6 +461,22 @@ namespace Platonus_Tester
         private void FinishMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             FinishTesting();
+        }
+
+        public void OnSourceLoaded(SourceFile file)
+        {
+            _sourcefile = file;
+            if (_sourcefile?.SourceText == null)
+            {
+                serviceTextBox.Text = Const.InviteToLoadFile;
+                StartButton.IsEnabled = true;
+                //StartButton.Content = "Поместите файл в окно";
+                return;
+            }
+            StartButton.Content = Const.StartTesting;
+            progressBar.IsIndeterminate = false;
+            progressBar.Value = 0;
+            ProcessSourceFile(_sourcefile);
         }
     }
 }

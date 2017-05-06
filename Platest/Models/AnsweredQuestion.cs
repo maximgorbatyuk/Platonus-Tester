@@ -1,4 +1,4 @@
-﻿namespace Platonus_Tester.Model
+﻿namespace Platest.Models
 {
     /// <summary>
     /// Отвеченный вопрос, где добавляемые поля - отмеченный, верный и флаг корректности (лол)

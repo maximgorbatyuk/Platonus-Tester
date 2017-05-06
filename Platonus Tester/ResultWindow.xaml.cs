@@ -11,10 +11,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using Platonus_Tester.Comments;
+using Platest.Models;
 using Platonus_Tester.Controller;
 using Platonus_Tester.Helper;
-using Platonus_Tester.Model;
+using ResultComments.Models;
 
 namespace Platonus_Tester
 {
@@ -35,7 +35,7 @@ namespace Platonus_Tester
             InitializeComponent();
             _hash = hash;
             _goodHelper = good;
-            _swearHelper = (Swear)bad;
+            _swearHelper = bad as Swear;
             _settings = SettingsController.Load();
             _rigth = 0;
         }

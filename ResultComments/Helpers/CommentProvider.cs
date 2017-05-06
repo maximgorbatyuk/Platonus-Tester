@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using ResultComments.Models;
 
-namespace Platonus_Tester.Helper
+namespace ResultComments.Helpers
 {
     /// <summary>
     /// Обработчик скачанного текста с репозитория в массив строк
     /// </summary>
-    public abstract class SwearHashProcessor
+    public abstract class CommentProvider
     {
 
         public static List<string> GetHashList(string text)

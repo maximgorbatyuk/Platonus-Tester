@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Platonus_Tester.Comments
+namespace ResultComments.Models
 {
     /// <summary>
     /// Класс потомок комментария. Перезаписывается только хэш набор комментариев
