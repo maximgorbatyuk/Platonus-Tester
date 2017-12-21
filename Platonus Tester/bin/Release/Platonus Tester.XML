@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Platonus Tester</name>
+    </assembly>
+    <members>
+        <member name="T:Platonus_Tester.ErrorWindow">
+            <summary>
+            Логика взаимодействия для ErrorWindow.xaml
+            </summary>
+            <summary>
+            ErrorWindow
+            </summary>
+        </member>
+        <member name="M:Platonus_Tester.ErrorWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.ResultWindow">
+            <summary>
+            Логика взаимодействия для ResultWindow.xaml
+            </summary>
+            <summary>
+            ResultWindow
+            </summary>
+        </member>
+        <member name="M:Platonus_Tester.ResultWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.SettingsForm">
+            <summary>
+            Логика взаимодействия для SettingsForm.xaml
+            </summary>
+            <summary>
+            SettingsForm
+            </summary>
+        </member>
+        <member name="M:Platonus_Tester.SettingsForm.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.App">
+            <summary>
+            Логика взаимодействия для App.xaml
+            </summary>
+            <summary>
+            App
+            </summary>
+        </member>
+        <member name="M:Platonus_Tester.App.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:Platonus_Tester.App.Main">
+            <summary>
+            Application Entry Point.
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.Controller.SettingsController">
+            <summary>
+            Класс для управления настройками. Настройки записываются в XML формате в файл в той же директории
+            </summary>
+        </member>
+        <member name="M:Platonus_Tester.Controller.SettingsController.SaveSettings(Platonus_Tester.Helper.Settings)">
+            <summary>
+            
+            </summary>
+            <param name="settings"></param>
+        </member>
+        <member name="M:Platonus_Tester.Controller.SettingsController.Load">
+            <summary>
+            Загрузка настроек из файла. Если происходит ошибка, возвращаются станлартные настройки
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Platonus_Tester.Helper.Const">
+            <summary>
+            Here I tryed to make an imitation of String resource file
+            This variables a assigned to Control-components contents and titles
+            Also here Color const placed.
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.Helper.UInterfaceHelper">
+            <summary>
+            Класс для вспомогательных функций обработки компонентов формы, чтобы сделать код в UI классах чище
+            До версии 2.0 была необходимость в использовании Dispatcher/Invoke для обновления компонентов
+            не из UI потока
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.Helper.Settings">
+            <summary>
+            настройки программы, записывающиеся в XML формате
+            </summary>
+        </member>
+        <member name="P:Platonus_Tester.Helper.Settings.EnableLimit">
+            <summary>
+            Установить лимит вопросов (25 обычно), как на тестировании
+            </summary>
+        </member>
+        <member name="P:Platonus_Tester.Helper.Settings.ShowSwearing">
+            <summary>
+            Показать ругательные комментарии
+            </summary>
+        </member>
+        <member name="P:Platonus_Tester.Helper.Settings.DownloadSwears">
+            <summary>
+            Загружать ли комментарии с репозитория
+            </summary>
+        </member>
+        <member name="P:Platonus_Tester.Helper.Settings.LightColorScheme">
+            <summary>
+            Будет добавлена в будущем поддержка двух цветовых схем.
+            </summary>
+        </member>
+        <member name="P:Platonus_Tester.Helper.Settings.QuestionLimitCount">
+            <summary>
+            Количество лимита 
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.MainWindow">
+            <summary>
+            Логика взаимодействия для MainWindow.xaml
+            </summary>
+            <summary>
+            MainWindow
+            </summary>
+        </member>
+        <member name="M:Platonus_Tester.MainWindow.StartGrid_OnDrop(System.Object,System.Windows.DragEventArgs)">
+            <summary>
+            Обработка файла, который "скинули" в форму
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Platonus_Tester.MainWindow.ProcessSourceFile(Platest.Models.SourceFile)">
+            <summary>
+            Обработка исходоного файла. Загрузка в лейблы.
+            </summary>
+            <param name="source"></param>
+        </member>
+        <member name="M:Platonus_Tester.MainWindow.OpenFile(System.String)">
+            <summary>
+            Создание диалогового окна выбора файла и вызов обработки, если файл соответсвует валидации
+            </summary>
+            <param name="dragname"></param>
+        </member>
+        <member name="M:Platonus_Tester.MainWindow.ValidateFilename(System.String)">
+            <summary>
+            Валидация имени файла. Пока что только проверка на расширение файла
+            </summary>
+            <param name="file"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Platonus_Tester.MainWindow.CheckQuestion">
+            <summary>
+            Функция считывает тайтл варианта ответа, который был отмечен, и записывает его в новый объект - 
+            отвеченный вопрос, добавляя к массиву отвеченных
+            </summary>
+        </member>
+        <member name="M:Platonus_Tester.MainWindow.DisplayProgress(System.Int32)">
+            <summary>
+            Отобрадение прогресса отвеченных вопрсов в отношении всего массива
+            Just for Fun
+            </summary>
+            <param name="position"></param>
+        </member>
+        <member name="M:Platonus_Tester.MainWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Platonus_Tester.Properties.Resources">
+            <summary>
+              Класс ресурсов со строгим типом для поиска локализованных строк и пр.
+            </summary>
+        </member>
+        <member name="P:Platonus_Tester.Properties.Resources.ResourceManager">
+            <summary>
+              Возврат кэшированного экземпляра ResourceManager, используемого этим классом.
+            </summary>
+        </member>
+        <member name="P:Platonus_Tester.Properties.Resources.Culture">
+            <summary>
+              Переопределяет свойство CurrentUICulture текущего потока для всех
+              подстановки ресурсов с помощью этого класса ресурсов со строгим типом.
+            </summary>
+        </member>
+    </members>
+</doc>

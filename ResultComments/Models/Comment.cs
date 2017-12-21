@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using Platonus_Tester.Helper;
+using ResultComments.Helpers;
 
-namespace Platonus_Tester.Comments
+namespace ResultComments.Models
 {
+    /// <summary>
+    /// Этот класс является предком для класса ругательств
+    /// Здесь определены все методы, а так же хэши комментариев
+    /// В дочернем классе переопределены именно хэши
+    /// </summary>
     public class Comment
     {
-        /*
-         * Этот класс является предком для класса ругательств
-         * Здесь определены все методы, а так же хэши комментариев
-         * В дочернем классе переопределены именно хэши
-         */
 
         protected List<string> _hash_100;
         protected List<string> _hash_99_90;
@@ -24,6 +24,11 @@ namespace Platonus_Tester.Comments
             InitiateHashes();
         }
 
+        /// <summary>
+        /// Функция возвращает рандомный элемент из массива комментариев
+        /// </summary>
+        /// <param name="res"></param>
+        /// <returns></returns>
         public string Get(double res)
         {
 
@@ -40,19 +45,6 @@ namespace Platonus_Tester.Comments
             return GetRandomSwear(_hash_49);
         }
 
-        public void AddHashList(string url, List<string> source)
-        {
-            List<string> hash = null;
-            if (url == Const.HASH_100_URL) hash = _hash_100;
-            if (url == Const.HASH_90_URL) hash = _hash_99_90;
-            if (url == Const.HASH_75_URL) hash = _hash_89_75;
-            if (url == Const.HASH_60_URL) hash = _hash_74_60;
-            if (url == Const.HASH_50_URL) hash = _hash_59_50;
-            if (url == Const.HASH_0_URL) hash = _hash_49;
-
-            hash?.AddRange(source);
-        }
-
         protected virtual string GetRandomSwear(List<string> hash)
         {
             return hash[GetRandomNumber(hash.Count)];
@@ -63,33 +55,36 @@ namespace Platonus_Tester.Comments
             return new Random().Next(count);
         }
 
+        /// <summary>
+        /// Инициализация массивов, которая перезаписывается в дочерних элменетах
+        /// </summary>
         protected virtual void InitiateHashes()
         {
-            _hash_100 = new List<string>(0)
+            _hash_100 = new List<string>
             {
                 "Молодец! Так держать! Эта сессия - ничто для тебя!"
             };
             //---------------------------------
-            _hash_99_90 = new List<string>(0)
+            _hash_99_90 = new List<string>
             {
                 "Круто! Еще немного подготовки - и стольник тебе обеспечен!"
             };
             //---------------------------------
-            _hash_89_75 = new List<string>(0)
+            _hash_89_75 = new List<string>
             {
                 "Я знаю, ты можешь лучше"
             };
             //---------------------------------
-            _hash_74_60 = new List<string>(0)
+            _hash_74_60 = new List<string>
             {
                 "Ну ничего, в другой раз повезет"
             };
-            _hash_59_50 = new List<string>(0)
+            _hash_59_50 = new List<string>
             {
                 "Слабовато, но стоит тебе подготовиться, и оценка будет выше!"
             };
             //--------------------------------
-            _hash_49 = new List<string>(0)
+            _hash_49 = new List<string>
             {
                 "Ну как же так? Это ведь легкий тест"
             };

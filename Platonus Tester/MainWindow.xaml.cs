@@ -17,21 +17,22 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Microsoft.Win32;
-using Platonus_Tester.Comments;
 using Platonus_Tester.Controller;
-using Platonus_Tester.CustomArgs;
 using Platonus_Tester.Helper;
-using Platonus_Tester.Model;
+using Platest.Controllers;
+using Platest.Interfaces;
+using Platest.Models;
+using ResultComments.Models;
 
 namespace Platonus_Tester
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, ISourceLoadListener
     {
 
-        private QuestionController  _questionManager;
+        private IQuestionManager _questionManager;
         private TestQuestion        _currentQuestion;
         private List<AnsweredQuestion> _answered;
         private int _count;
@@ -45,6 +46,7 @@ namespace Platonus_Tester
 
         private readonly List<RadioButton> _radioButtonsList;
         private readonly List<Rectangle> _recList;
+        private readonly List<TextBlock> _tbList;
 
 
         public MainWindow()
@@ -55,18 +57,18 @@ namespace Platonus_Tester
             WelcomeTextBlock.Text = Const.WelcomeText;
             DescrTextBlock.Text = Const.DescriptionText;
             serviceTextBox.Text = Const.InviteToLoadFile;
-            informationLabel.Content = "";
-            versionLabel.Content = $"Версия: {Const.Version}";
+            InformationLabel.Content = "";
+            VersionLabel.Content = $"Версия: {Const.Version}";
             SettingsButton.Content = Const.SettingsText;
             _radioButtonsList = new List<RadioButton>
             {
-                RBVariant1,
+                RbVariant1,
                 RBVariant2,
                 RBVariant3,
                 RBVariant4,
                 RBVariant5,
             };
-
+            RbVariant1.IsChecked = true;
             _recList = new List<Rectangle>
             {
                 Rc1,
@@ -74,6 +76,15 @@ namespace Platonus_Tester
                 Rc3,
                 Rc4,
                 Rc5,
+            };
+
+            _tbList = new List<TextBlock>
+            {
+                V1TextBlock,
+                V2TextBlock,
+                V3TextBlock,
+                V4TextBlock,
+                V5TextBlock,
             };
 
         }
@@ -89,11 +100,21 @@ namespace Platonus_Tester
             //value = !value;
         }
 
+        /// <summary>
+        /// Обработка файла, который "скинули" в форму
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StartGrid_OnDrop(object sender, DragEventArgs e)
         {
             if (!e.Data.GetDataPresent(DataFormats.FileDrop)) return;
 
-            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            var files = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (files == null)
+            {
+                return;
+            }
+
             if (files.Length <= 0) return;
             OpenFile(files[0]);
         }
@@ -102,15 +123,13 @@ namespace Platonus_Tester
         {
             e.Effects = DragDropEffects.Move;
             e.Handled = true;
-            // throw new NotImplementedException();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            _questionManager    = new QuestionController();
+            _questionManager    = new QuestionManager();
            // _settings           = SettingsController.Load();
-            _sourceController   = new SourceController();
-            _sourceController.OnLoadComleted += OnSourceLoaded;
+            _sourceController   = new SourceController(this);
 
             _goodComment = new Comment();
             _badComment = new Swear();
@@ -119,9 +138,14 @@ namespace Platonus_Tester
             StartGrid.TranslatePoint(new Point(0, 0), MainWindow1);
             StartButton.Content = Const.LoadSourceFile;
             _settings = SettingsController.Load();
-            swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
+            SwearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
+            LimitLabel.Content = _settings.EnableLimit ? Const.LimitEnabled : Const.LimitDisabled;
         }
 
+        /// <summary>
+        /// Обработка исходоного файла. Загрузка в лейблы.
+        /// </summary>
+        /// <param name="source"></param>
         private async void ProcessSourceFile(SourceFile source)
         {
             _questionManager.SetSourceList(source);
@@ -133,9 +157,13 @@ namespace Platonus_Tester
             _currentQuestion = _questionManager.GetNext();
             _count += 1;
             LoadToLabels(_currentQuestion);
-            informationLabel.Content = $"Осталось вопросов: {_questionManager.GetCount()}";
+            var remain = !_settings.EnableLimit
+                ? _questionManager.GetCount() - _answered.Count
+                : _settings.QuestionLimitCount - _answered.Count;
 
-            swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
+            InformationLabel.Content = $"Осталось {remain} вопр.";
+            LimitLabel.Content = _settings.EnableLimit ? Const.LimitEnabled : Const.LimitDisabled;
+            SwearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
             //
             var count = _questionManager.GetCount();
             if (count > 0)
@@ -153,28 +181,12 @@ namespace Platonus_Tester
             CheckButton.Content = Const.CheckQuestion;
             //UInterfaceHelper.SetProgressValue(progressBar, 100);
 
-            var errors = _questionManager.Errors;
+            var errors = _questionManager.GetErrors();
             if (errors != null)
             {
-                new ErrorWindow(errors).ShowDialog();
-            }
-            if (_settings.DownloadSwears)
-            {
-                await StartGettingHashesAsync();
+                new ErrorWindow(errors.ToList()).ShowDialog();
             }
         }
-
-        private void OnSourceLoaded(object sender, SourceFileLoadedArgs e)
-        {
-            _sourcefile = e.ProcessingResult;
-            if (_sourcefile.SourceText == null) return;
-            StartButton.Content = Const.StartTesting;
-            progressBar.IsIndeterminate = false;
-            progressBar.Value = 0;
-            ProcessSourceFile(_sourcefile);
-            
-        }
-
 
         private void LoadToLabels(Question test)
         {
@@ -196,10 +208,12 @@ namespace Platonus_Tester
                 var rec = _recList[i];
                 rb.Background = new SolidColorBrush(Const.LigthBackgroundColor);
                 rec.Fill = new SolidColorBrush(Const.LigthBackgroundColor );
-                rec.Fill = new SolidColorBrush(Const.LigthBackgroundColor );
+                //rec.Fill = new SolidColorBrush(Const.LigthBackgroundColor );
 
-                rb.Content = GetRandomItem(hash, i);
-                hash.Remove((string) rb.Content);
+                _tbList[i].Text = GetRandomItem(hash, i);
+                // rb.Content = GetRandomItem(hash, i);
+                // hash.Remove((string) rb.Content);
+                hash.Remove(_tbList[i].Text);
             }
             //---------------------------
         }
@@ -208,44 +222,6 @@ namespace Platonus_Tester
         {
             var random = new Random(DateTime.Now.Millisecond + i);
             return hash[random.Next(hash.Count)];
-        }
-
-
-        private async Task StartGettingHashesAsync()
-        {
-            foreach (var h in new List<string>
-            {
-                Const.HASH_100_URL,
-                Const.HASH_90_URL,
-                Const.HASH_75_URL,
-                Const.HASH_60_URL,
-                Const.HASH_50_URL,
-                Const.HASH_0_URL
-            })
-            {
-                await GetHashListAsync(h);
-            }
-        }
-
-        private async Task GetHashListAsync(string url)
-        {
-            // Получение списков ругательств в фоновом процессе
-            try
-            {
-                if (!DownloadController.CheckForInternetConnection()) return;
-                var result = await DownloadController.ExecuteRequestAsync(url);
-                if (result == null) return;
-
-                var array = SwearHashProcessor.GetHashList(result);
-                if (array.Count > 0)
-                {
-                    _badComment.AddHashList(url, array);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
@@ -271,9 +247,14 @@ namespace Platonus_Tester
             StartButton.IsEnabled = false;
             progressBar.Value = 0;
             _sourceController.ProcessSourceFileAsync(_fileName);
-            swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
+            LimitLabel.Content = _settings.EnableLimit ? Const.LimitEnabled : Const.LimitDisabled;
+            SwearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
         }
 
+        /// <summary>
+        /// Создание диалогового окна выбора файла и вызов обработки, если файл соответсвует валидации
+        /// </summary>
+        /// <param name="dragname"></param>
         private void OpenFile(string dragname = null)
         {
             serviceTextBox.Background = new SolidColorBrush( Const.LigthBackgroundColor );
@@ -281,7 +262,8 @@ namespace Platonus_Tester
             {
                 var openFileDialog1 = new OpenFileDialog
                 {
-                    InitialDirectory = Directory.GetCurrentDirectory(),
+                    //InitialDirectory = Directory.GetCurrentDirectory(),
+                    InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
                     FilterIndex = 2,
                     RestoreDirectory = true
                 };
@@ -305,8 +287,13 @@ namespace Platonus_Tester
             //UInterfaceHelper.SetText(serviceTextBox, Const.FileProcessing);
             LoadSettings();
         }
-
-        private bool ValidateFilename(string file)
+        
+        /// <summary>
+        /// Валидация имени файла. Пока что только проверка на расширение файла
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        private static bool ValidateFilename(string file)
         {
             return file.IndexOf(".docx", StringComparison.Ordinal) > -1 ||
                    file.IndexOf(".doc", StringComparison.Ordinal) > -1 ||
@@ -330,17 +317,30 @@ namespace Platonus_Tester
         private void AboutMenuItem_Click(object sender, RoutedEventArgs e)
         {
             Process.Start(
-                "https://github.com/maximgorbatyuk/Platonus-Tester/");
+                "https://github.com/maximgorbatyuk/Platonus-Tester/#platonus-tester");
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            new SettingsForm().ShowDialog();
+            var settingsView = new SettingsForm();
+            settingsView.Closed += SettingsViewOnClosed;
+            settingsView.ShowDialog();            
         }
 
+        private void SettingsViewOnClosed(object sender, EventArgs eventArgs)
+        {
+            _settings = SettingsController.Load();
+            LimitLabel.Content = _settings.EnableLimit ? Const.LimitEnabled : Const.LimitDisabled;
+            SwearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
+        }
 
+        /// <summary>
+        /// Функция считывает тайтл варианта ответа, который был отмечен, и записывает его в новый объект - 
+        /// отвеченный вопрос, добавляя к массиву отвеченных
+        /// </summary>
         private void CheckQuestion()
         {
+            if (_currentQuestion == null) return;
             var answer = new AnsweredQuestion
             {
                 AskQuestion = _currentQuestion.AskQuestion,
@@ -349,15 +349,13 @@ namespace Platonus_Tester
             //------------------------
             foreach (var rb in _radioButtonsList)
             {
-                if (rb.IsChecked ?? false)
+                var tb = (TextBlock) rb.Content;
+                if (rb.IsChecked != null && rb.IsChecked.Value)
                 {
-                    answer.ChosenAnswer = (string) rb.Content;
+                    answer.ChosenAnswer = tb.Text;
                 }
             }
-            if (answer.ChosenAnswer == answer.CorrectAnswer)
-            {
-                answer.IsItCorrect = true;
-            }
+            answer.IsItCorrect = answer.ChosenAnswer == answer.CorrectAnswer;
             _answered.Add(answer);
         }
 
@@ -371,7 +369,7 @@ namespace Platonus_Tester
             _loadedFile = false;
             serviceTextBox.Text = Const.InviteToLoadFile;
             StartButton.Content = Const.LoadSourceFile;
-            informationLabel.Content = "";
+            InformationLabel.Content = "";
         }
 
         private void SettingsMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -386,21 +384,30 @@ namespace Platonus_Tester
             for (var index = 0; index < _radioButtonsList.Count; index++)
             {
                 var rb = _radioButtonsList[index];
-                var rec = _recList[index];
-                if ((string) rb.Content == _currentQuestion.CorrectAnswer)
+                var tb = (TextBlock)rb.Content;
+                if (tb.Text == _currentQuestion.CorrectAnswer)
                 {
-                    UInterfaceHelper.PaintBackColor(rec, true);
+                    UInterfaceHelper.PaintBackColor(_recList[index], true);
+                    
+                    //tb.Background = new SolidColorBrush(Const.CorrectColor);
+                    //_tbList[index].Background = new SolidColorBrush(Const.CorrectColor);
                 }
                 else if (rb.IsChecked ?? false)
                 {
-                    UInterfaceHelper.PaintBackColor(rec, false);
+                    UInterfaceHelper.PaintBackColor(_recList[index], false);
+                    //tb.Background = new SolidColorBrush(Const.IncorrectColor);
                 }
             }
         }
 
+        /// <summary>
+        /// Отобрадение прогресса отвеченных вопрсов в отношении всего массива
+        /// Just for Fun
+        /// </summary>
+        /// <param name="position"></param>
         private void DisplayProgress(int position)
         {
-            var count = _questionManager.GetCount();
+            var count = _settings.EnableLimit ? _settings.QuestionLimitCount : _questionManager.GetCount();
             count = count > 0 ? count: 1;
             var pValue = (double)position / count * 100;
             pValue = pValue > 100 ? 100 : pValue;
@@ -409,11 +416,12 @@ namespace Platonus_Tester
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
-            
-            if (_answered.Count == _questionManager.GetFirstListCount())
+            var cond = _answered.Count == _questionManager.GetFirstListCount() ||
+                       (_answered.Count == _settings.QuestionLimitCount && _settings.EnableLimit == true);
+            if (cond)
             {
-                _settings = SettingsController.Load();
-                swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
+                //_settings = SettingsController.Load();
+                //swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
                 FinishTesting();
             }
             else
@@ -422,8 +430,14 @@ namespace Platonus_Tester
                 _currentQuestion = _questionManager.GetNext();
                 LoadToLabels(_currentQuestion);
                 DisplayProgress(_questionManager.GetCurrentPosition());
-                informationLabel.Content = $"Осталось вопросов: {_questionManager.GetCount() - _answered.Count}";
-                if (_answered.Count == _questionManager.GetCount())
+
+                var remain = !_settings.EnableLimit ? 
+                    _questionManager.GetCount() - _answered.Count : 
+                    _settings.QuestionLimitCount - _answered.Count;
+
+                InformationLabel.Content = $"Осталось вопросов: {remain}";
+
+                if (remain == 0)
                 {
                     NextButton.Content = Const.ShowResult;
                 }
@@ -433,7 +447,7 @@ namespace Platonus_Tester
         private void StartAgainMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             if (_fileName == "") return;
-            UInterfaceHelper.SetText(informationLabel, "");
+            UInterfaceHelper.SetText(InformationLabel, "");
             UInterfaceHelper.SetText(serviceTextBox, Const.FileProcessing);
             LoadSettings();
             // throw new NotImplementedException();
@@ -447,6 +461,22 @@ namespace Platonus_Tester
         private void FinishMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
             FinishTesting();
+        }
+
+        public void OnSourceLoaded(SourceFile file)
+        {
+            _sourcefile = file;
+            if (_sourcefile?.SourceText == null)
+            {
+                serviceTextBox.Text = Const.InviteToLoadFile;
+                StartButton.IsEnabled = true;
+                //StartButton.Content = "Поместите файл в окно";
+                return;
+            }
+            StartButton.Content = Const.StartTesting;
+            progressBar.IsIndeterminate = false;
+            progressBar.Value = 0;
+            ProcessSourceFile(_sourcefile);
         }
     }
 }

@@ -1,12 +1,20 @@
-﻿using System;
+﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using Platonus_Tester.Model;
+using System.Linq;
+using Platest.Interfaces;
+using Platest.Models;
 
-namespace Platonus_Tester.Helper
+namespace Platest.Helpers
 {
-    public class QuestionProcessor
+    /// <summary>
+    /// Класс-кор проекта. Обработчик текста вопросов в хэш вопросов-объектов
+    /// </summary>
+    public class QuestionProcessor : IQuestionProvider
     {
         private SourceFile _file;
         private List<string> _errorList;
@@ -16,6 +24,12 @@ namespace Platonus_Tester.Helper
             _errorList = new List<string>(0);
         }
 
+        /// <summary>
+        /// Функция-инициализатор обработки. Определяю количество вхождений слова question в тегах 
+        /// для того, чтобы определить количество итераций. 
+        /// </summary>
+        /// <param name="file">Объект содержит текст и картинки</param>
+        /// <returns>Массив тестовых вопросов</returns>
         public List<TestQuestion> GetQuestionList(SourceFile file)
         {
             _file = file;
@@ -48,6 +62,11 @@ namespace Platonus_Tester.Helper
             return result;
         }
 
+        /// <summary>
+        /// Здесь планирую сделать замену TAMOS формата в Platonus формат
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
         private static string ProcessText(string text)
         {
             /*
@@ -62,6 +81,12 @@ namespace Platonus_Tester.Helper
             return result;
         }
 
+        public const string MissingVariant = "Ошибка: отсутствует вариант ответа";
+        /// <summary>
+        /// Функция, возвращающая тестовый вопрос
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
         private TestQuestion GetQuestion(string text)
         {
             try
@@ -103,7 +128,7 @@ namespace Platonus_Tester.Helper
 
                 for (var i = hash.Count; i < 5; i++)
                 {
-                    hash.Add(Const.MissingVariant);
+                    hash.Add(MissingVariant);
                 }
 
                 var result = new TestQuestion
@@ -122,6 +147,11 @@ namespace Platonus_Tester.Helper
             }
         }
 
+        /// <summary>
+        /// Поиск и удаление всех вхождений тегов picture
+        /// </summary>
+        /// <param name="text">Исходный текст для форматирования</param>
+        /// <returns>Текст без тегов картинок</returns>
         private string RemovePictureText(string text)
         {
             if (GetIndex("<#picture= ", text) == -1)
@@ -150,12 +180,18 @@ namespace Platonus_Tester.Helper
             }
         }
 
-        public int GetWordCount(string word, string source)
+        /// <summary>
+        /// Функция - вычислитель количество вхождений слова в тексте
+        /// </summary>
+        /// <param name="word">Искомое слово</param>
+        /// <param name="source">Текст, в котором ищется слово</param>
+        /// <returns>Количество вхождений</returns>
+        private int GetWordCount(string word, string source)
         {
             return (source.Length - source.Replace(word, "").Length) / word.Length;
         }
 
-        public List<string> GetErrors()
+        public IEnumerable<string> GetErrors()
         {
             if (_errorList == null || _errorList.Count <= 0) return null;
             var tmp = _errorList;
@@ -179,6 +215,11 @@ namespace Platonus_Tester.Helper
             return text.IndexOf(search, StringComparison.Ordinal);
         }
 
+        /// <summary>
+        /// Поиск и возврат картинки по названию
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         private Image FindImageByName(string name)
         {
             Image result = null;

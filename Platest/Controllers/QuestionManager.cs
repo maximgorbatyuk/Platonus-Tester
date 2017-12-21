@@ -1,35 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
-using Platonus_Tester.Helper;
-using Platonus_Tester.Model;
+using System.Linq;
+using Platest.Helpers;
+using Platest.Interfaces;
+using Platest.Models;
 
-namespace Platonus_Tester.Controller
+namespace Platest.Controllers
 {
-    public class QuestionController
+    /// <summary>
+    /// Класс для обработки массива готовых тестовых вопросов
+    ///
+    /// </summary>
+    public class QuestionManager : IQuestionManager
     {
         private List<TestQuestion> _list;
-        public List<string> Errors { get; private set; }
+
+        
+
         private int _firstListCount;
-        private readonly QuestionProcessor _questionProcessor;
+
+        private readonly IQuestionProvider _questionProvider;
+
         private int _currentIndex;
+
         private int _limit;
 
-        public QuestionController()
+        public QuestionManager()
         {
-            _list = new List<TestQuestion>(0);
-            _questionProcessor = new QuestionProcessor();
+            _list = new List<TestQuestion>();
+            _questionProvider = new QuestionProcessor();
         }
 
         public void SetSourceList(SourceFile file)
         {
-            _list = _questionProcessor.GetQuestionList(file);
+            _list = _questionProvider.GetQuestionList(file);
             _limit = _list.Count;
             _currentIndex = 0;
             _firstListCount = _list.Count;
-            Errors = _questionProcessor.GetErrors();
             Shuffle();
         }
 
+        /// <summary>
+        /// Перемешение вопросов в массиве.
+        /// </summary>
         public void Shuffle()
         {
             var count = _list.Count;
@@ -43,6 +56,12 @@ namespace Platonus_Tester.Controller
             _list = result;
         }
 
+        /// <summary>
+        /// Возвращает следующий вопрос. Раньше (до перевода на WPF 04.06.2016) метод удалял
+        /// возвращаемый вопрос. Сейчас принцип выдачи изменен, так как в планах
+        /// сделать переход по предыдущим вопросам
+        /// </summary>
+        /// <returns></returns>
         public TestQuestion GetNext()
         {
             if (_currentIndex >= _list.Count || _currentIndex >= _limit)
@@ -64,5 +83,7 @@ namespace Platonus_Tester.Controller
         }
 
         public int GetCurrentPosition() => _currentIndex;
+
+        public IEnumerable<string> GetErrors() => _questionProvider?.GetErrors();
     }
 }

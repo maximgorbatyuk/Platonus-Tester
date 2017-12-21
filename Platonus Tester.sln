@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Platonus Tester", "Platonus Tester\Platonus Tester.csproj", "{CAF474A8-0A6C-4CB0-B38E-E23644D58E77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Platest", "Platest\Platest.csproj", "{A41424E6-309B-4F20-9988-DE56038A02B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResultComments", "ResultComments\ResultComments.csproj", "{83D12892-8383-44B3-BC52-585C6909ECBF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{CAF474A8-0A6C-4CB0-B38E-E23644D58E77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CAF474A8-0A6C-4CB0-B38E-E23644D58E77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CAF474A8-0A6C-4CB0-B38E-E23644D58E77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A41424E6-309B-4F20-9988-DE56038A02B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A41424E6-309B-4F20-9988-DE56038A02B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A41424E6-309B-4F20-9988-DE56038A02B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A41424E6-309B-4F20-9988-DE56038A02B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83D12892-8383-44B3-BC52-585C6909ECBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83D12892-8383-44B3-BC52-585C6909ECBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83D12892-8383-44B3-BC52-585C6909ECBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83D12892-8383-44B3-BC52-585C6909ECBF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

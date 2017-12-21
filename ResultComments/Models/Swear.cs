@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace Platonus_Tester.Comments
+namespace ResultComments.Models
 {
+    /// <summary>
+    /// Класс потомок комментария. Перезаписывается только хэш набор комментариев
+    /// </summary>
     public class Swear : Comment
     {
         protected override void InitiateHashes()

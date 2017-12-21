@@ -6,36 +6,60 @@ using Platonus_Tester.Helper;
 
 namespace Platonus_Tester.Controller
 {
+    /// <summary>
+    /// Класс для управления настройками. Настройки записываются в XML формате в файл в той же директории
+    /// </summary>
     public abstract class SettingsController
     {
-        private const string FileName = "settings.xml";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="settings"></param>
         public static void SaveSettings(Settings settings)
         {
-            using (var stream = new StreamWriter(File.Open(FileName, FileMode.Create)))
+            //var path = Environment.SpecialFolder.ApplicationData;
+            //var fileName = $"C:\\ProgramData\\Platonus tester\\settings.xml";
+            var fileName = $"{Environment.CurrentDirectory}\\settings.xml";
+            StreamWriter stream = null;
+            try
             {
+                stream = new StreamWriter(File.Open(fileName, FileMode.Create));
                 var serializer = new XmlSerializer(typeof(Settings));
                 serializer.Serialize(stream, settings);
             }
+            catch (Exception ex)
+            {
+                //ignored
+            }
+            finally
+            {
+                stream?.Close();
+            }
         }
 
+        /// <summary>
+        /// Загрузка настроек из файла. Если происходит ошибка, возвращаются станлартные настройки
+        /// </summary>
+        /// <returns></returns>
         public static Settings Load()
         {
+            //var path = Environment.SpecialFolder.ApplicationData;
+            var fileName = $"{Environment.CurrentDirectory}\\settings.xml";
+            Settings settings = null;
             StreamReader stream = null;
             try
             {
-                if (File.Exists(FileName))
+                if (File.Exists(fileName))
                 {
-                    stream = new StreamReader(File.Open(FileName, FileMode.Open));
+                    stream = new StreamReader(File.Open(fileName, FileMode.Open));
                     var serializer = new XmlSerializer(typeof(Settings));
-                    var returnSettings = serializer.Deserialize(stream) as Settings;
-                    return returnSettings;
+                    settings = serializer.Deserialize(stream) as Settings;
                 }
                 else
                 {
-                    var settings = new Settings();
+                    settings = new Settings();
                     SaveSettings(settings);
-                    return settings;
                 }
             }
             catch (Exception ex)
@@ -48,7 +72,7 @@ namespace Platonus_Tester.Controller
             {
                 stream?.Close();
             }
-            return new Settings();
+            return settings;
         }
 
         private static void define_error(string text)
