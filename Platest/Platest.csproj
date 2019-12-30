@@ -53,6 +53,7 @@
     <Compile Include="Interfaces\ISourceLoadListener.cs" />
     <Compile Include="Interfaces\IQuestionManager.cs" />
     <Compile Include="Models\AnsweredQuestion.cs" />
+    <Compile Include="Models\CurrentDispatcherFile.cs" />
     <Compile Include="Models\Question.cs" />
     <Compile Include="Models\SourceFile.cs" />
     <Compile Include="Models\TestQuestion.cs" />

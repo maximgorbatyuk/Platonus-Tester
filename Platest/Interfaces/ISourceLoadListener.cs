@@ -4,6 +4,6 @@ namespace Platest.Interfaces
 {
     public interface ISourceLoadListener
     {
-        void OnSourceLoaded(SourceFile file);
+        void OnSourceLoaded(object currentDispatcherFile);
     }
 }

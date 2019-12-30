@@ -33,7 +33,7 @@ namespace Platonus_Tester
     {
 
         private IQuestionManager _questionManager;
-        private TestQuestion        _currentQuestion;
+        private TestQuestion _currentQuestion;
         private List<AnsweredQuestion> _answered;
         private int _count;
         private bool _loadedFile;
@@ -68,7 +68,7 @@ namespace Platonus_Tester
                 RBVariant4,
                 RBVariant5,
             };
-            RbVariant1.IsChecked = true;
+            RbVariant1.IsChecked = false;
             _recList = new List<Rectangle>
             {
                 Rc1,
@@ -127,9 +127,9 @@ namespace Platonus_Tester
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            _questionManager    = new QuestionManager();
-           // _settings           = SettingsController.Load();
-            _sourceController   = new SourceController(this);
+            _questionManager = new QuestionManager();
+            // _settings           = SettingsController.Load();
+            _sourceController = new SourceController(this);
 
             _goodComment = new Comment();
             _badComment = new Swear();
@@ -207,7 +207,7 @@ namespace Platonus_Tester
                 var rb = _radioButtonsList[i];
                 var rec = _recList[i];
                 rb.Background = new SolidColorBrush(Const.LigthBackgroundColor);
-                rec.Fill = new SolidColorBrush(Const.LigthBackgroundColor );
+                rec.Fill = new SolidColorBrush(Const.LigthBackgroundColor);
                 //rec.Fill = new SolidColorBrush(Const.LigthBackgroundColor );
 
                 _tbList[i].Text = GetRandomItem(hash, i);
@@ -238,7 +238,7 @@ namespace Platonus_Tester
 
         private void LoadSettings()
         {
-            serviceTextBox.Background = new SolidColorBrush( Const.LigthBackgroundColor );
+            serviceTextBox.Background = new SolidColorBrush(Const.LigthBackgroundColor);
             _settings = SettingsController.Load();
             _answered = new List<AnsweredQuestion>(0);
             StartGrid.Visibility = Visibility.Visible;
@@ -249,6 +249,13 @@ namespace Platonus_Tester
             _sourceController.ProcessSourceFileAsync(_fileName);
             LimitLabel.Content = _settings.EnableLimit ? Const.LimitEnabled : Const.LimitDisabled;
             SwearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
+
+            var errors = _sourceController.GetErrors();
+            if (errors != null)
+
+            {
+                new ErrorWindow(errors.ToList()).ShowDialog();
+            }
         }
 
         /// <summary>
@@ -257,7 +264,7 @@ namespace Platonus_Tester
         /// <param name="dragname"></param>
         private void OpenFile(string dragname = null)
         {
-            serviceTextBox.Background = new SolidColorBrush( Const.LigthBackgroundColor );
+            serviceTextBox.Background = new SolidColorBrush(Const.LigthBackgroundColor);
             if (dragname == null)
             {
                 var openFileDialog1 = new OpenFileDialog
@@ -287,7 +294,7 @@ namespace Platonus_Tester
             //UInterfaceHelper.SetText(serviceTextBox, Const.FileProcessing);
             LoadSettings();
         }
-        
+
         /// <summary>
         /// Валидация имени файла. Пока что только проверка на расширение файла
         /// </summary>
@@ -303,7 +310,7 @@ namespace Platonus_Tester
         private void StartGrid_DragEnter(object sender, DragEventArgs e)
         {
             serviceTextBox.Text = Const.DraggingFiles;
-            serviceTextBox.Background = new SolidColorBrush( Const.LigthBlack );
+            serviceTextBox.Background = new SolidColorBrush(Const.LigthBlack);
             e.Effects = e.Data.GetDataPresent(DataFormats.FileDrop) ?
                 DragDropEffects.Move :
                 DragDropEffects.None;
@@ -324,7 +331,7 @@ namespace Platonus_Tester
         {
             var settingsView = new SettingsForm();
             settingsView.Closed += SettingsViewOnClosed;
-            settingsView.ShowDialog();            
+            settingsView.ShowDialog();
         }
 
         private void SettingsViewOnClosed(object sender, EventArgs eventArgs)
@@ -349,7 +356,7 @@ namespace Platonus_Tester
             //------------------------
             foreach (var rb in _radioButtonsList)
             {
-                var tb = (TextBlock) rb.Content;
+                var tb = (TextBlock)rb.Content;
                 if (rb.IsChecked != null && rb.IsChecked.Value)
                 {
                     answer.ChosenAnswer = tb.Text;
@@ -388,14 +395,10 @@ namespace Platonus_Tester
                 if (tb.Text == _currentQuestion.CorrectAnswer)
                 {
                     UInterfaceHelper.PaintBackColor(_recList[index], true);
-                    
-                    //tb.Background = new SolidColorBrush(Const.CorrectColor);
-                    //_tbList[index].Background = new SolidColorBrush(Const.CorrectColor);
                 }
                 else if (rb.IsChecked ?? false)
                 {
                     UInterfaceHelper.PaintBackColor(_recList[index], false);
-                    //tb.Background = new SolidColorBrush(Const.IncorrectColor);
                 }
             }
         }
@@ -408,7 +411,7 @@ namespace Platonus_Tester
         private void DisplayProgress(int position)
         {
             var count = _settings.EnableLimit ? _settings.QuestionLimitCount : _questionManager.GetCount();
-            count = count > 0 ? count: 1;
+            count = count > 0 ? count : 1;
             var pValue = (double)position / count * 100;
             pValue = pValue > 100 ? 100 : pValue;
             progressBar.Value = pValue;
@@ -416,33 +419,33 @@ namespace Platonus_Tester
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
+            CheckQuestion();
+            _currentQuestion = _questionManager.GetNext();
+            LoadToLabels(_currentQuestion);
+            DisplayProgress(_questionManager.GetCurrentPosition());
+
+            var remain = !_settings.EnableLimit ?
+                _questionManager.GetCount() - _answered.Count :
+                _settings.QuestionLimitCount - _answered.Count;
+
+            InformationLabel.Content = $"Осталось вопросов: {remain}";
+
+            if (remain == 1)
+            {
+                NextButton.Content = Const.ShowResult;
+            }
+            foreach (var rb in _radioButtonsList)
+            {
+                rb.IsChecked = false;
+            }
             var cond = _answered.Count == _questionManager.GetFirstListCount() ||
-                       (_answered.Count == _settings.QuestionLimitCount && _settings.EnableLimit == true);
+                     (_answered.Count == _settings.QuestionLimitCount && _settings.EnableLimit == true);
             if (cond)
             {
-                //_settings = SettingsController.Load();
-                //swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
                 FinishTesting();
             }
-            else
-            {
-                CheckQuestion();
-                _currentQuestion = _questionManager.GetNext();
-                LoadToLabels(_currentQuestion);
-                DisplayProgress(_questionManager.GetCurrentPosition());
-
-                var remain = !_settings.EnableLimit ? 
-                    _questionManager.GetCount() - _answered.Count : 
-                    _settings.QuestionLimitCount - _answered.Count;
-
-                InformationLabel.Content = $"Осталось вопросов: {remain}";
-
-                if (remain == 0)
-                {
-                    NextButton.Content = Const.ShowResult;
-                }
-            }
         }
+
 
         private void StartAgainMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
@@ -450,7 +453,6 @@ namespace Platonus_Tester
             UInterfaceHelper.SetText(InformationLabel, "");
             UInterfaceHelper.SetText(serviceTextBox, Const.FileProcessing);
             LoadSettings();
-            // throw new NotImplementedException();
         }
 
         private void LoadSourceMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -463,14 +465,27 @@ namespace Platonus_Tester
             FinishTesting();
         }
 
-        public void OnSourceLoaded(SourceFile file)
+        public void OnSourceLoaded(object currentDispatcher)
         {
-            _sourcefile = file;
+            CurrentDispatcherFile sourcefile = (CurrentDispatcherFile)currentDispatcher;
+            Dispatcher targetDispatcher = sourcefile.Dispatcher as Dispatcher;
+            if (targetDispatcher == null)
+            {
+                return;
+            }
+
+            targetDispatcher.BeginInvoke(DispatcherPriority.Normal, new RunProcessDelegate(RunProcess), sourcefile.SourceFile);
+        }
+        public delegate void RunProcessDelegate(SourceFile sourcefile);
+
+        public void RunProcess(object sourcefile)
+        {
+
+            _sourcefile = (SourceFile)sourcefile;
             if (_sourcefile?.SourceText == null)
             {
                 serviceTextBox.Text = Const.InviteToLoadFile;
                 StartButton.IsEnabled = true;
-                //StartButton.Content = "Поместите файл в окно";
                 return;
             }
             StartButton.Content = Const.StartTesting;
