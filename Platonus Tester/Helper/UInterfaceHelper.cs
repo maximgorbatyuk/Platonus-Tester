@@ -138,7 +138,6 @@ namespace Platonus_Tester.Helper
             Application.Current.Dispatcher.BeginInvoke(
                 DispatcherPriority.Normal,
                 new Action(() => rb.Background = new SolidColorBrush(ligthBackgroundColor)));
-            // throw new NotImplementedException();
         }
     }
 }
