@@ -33,7 +33,7 @@ namespace Platonus_Tester
     {
 
         private IQuestionManager _questionManager;
-        private TestQuestion        _currentQuestion;
+        private TestQuestion _currentQuestion;
         private List<AnsweredQuestion> _answered;
         private int _count;
         private bool _loadedFile;
@@ -127,9 +127,9 @@ namespace Platonus_Tester
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            _questionManager    = new QuestionManager();
-           // _settings           = SettingsController.Load();
-            _sourceController   = new SourceController(this);
+            _questionManager = new QuestionManager();
+            // _settings           = SettingsController.Load();
+            _sourceController = new SourceController(this);
 
             _goodComment = new Comment();
             _badComment = new Swear();
@@ -207,7 +207,7 @@ namespace Platonus_Tester
                 var rb = _radioButtonsList[i];
                 var rec = _recList[i];
                 rb.Background = new SolidColorBrush(Const.LigthBackgroundColor);
-                rec.Fill = new SolidColorBrush(Const.LigthBackgroundColor );
+                rec.Fill = new SolidColorBrush(Const.LigthBackgroundColor);
                 //rec.Fill = new SolidColorBrush(Const.LigthBackgroundColor );
 
                 _tbList[i].Text = GetRandomItem(hash, i);
@@ -238,7 +238,7 @@ namespace Platonus_Tester
 
         private void LoadSettings()
         {
-            serviceTextBox.Background = new SolidColorBrush( Const.LigthBackgroundColor );
+            serviceTextBox.Background = new SolidColorBrush(Const.LigthBackgroundColor);
             _settings = SettingsController.Load();
             _answered = new List<AnsweredQuestion>(0);
             StartGrid.Visibility = Visibility.Visible;
@@ -257,7 +257,7 @@ namespace Platonus_Tester
         /// <param name="dragname"></param>
         private void OpenFile(string dragname = null)
         {
-            serviceTextBox.Background = new SolidColorBrush( Const.LigthBackgroundColor );
+            serviceTextBox.Background = new SolidColorBrush(Const.LigthBackgroundColor);
             if (dragname == null)
             {
                 var openFileDialog1 = new OpenFileDialog
@@ -287,7 +287,7 @@ namespace Platonus_Tester
             //UInterfaceHelper.SetText(serviceTextBox, Const.FileProcessing);
             LoadSettings();
         }
-        
+
         /// <summary>
         /// Валидация имени файла. Пока что только проверка на расширение файла
         /// </summary>
@@ -303,7 +303,7 @@ namespace Platonus_Tester
         private void StartGrid_DragEnter(object sender, DragEventArgs e)
         {
             serviceTextBox.Text = Const.DraggingFiles;
-            serviceTextBox.Background = new SolidColorBrush( Const.LigthBlack );
+            serviceTextBox.Background = new SolidColorBrush(Const.LigthBlack);
             e.Effects = e.Data.GetDataPresent(DataFormats.FileDrop) ?
                 DragDropEffects.Move :
                 DragDropEffects.None;
@@ -324,7 +324,7 @@ namespace Platonus_Tester
         {
             var settingsView = new SettingsForm();
             settingsView.Closed += SettingsViewOnClosed;
-            settingsView.ShowDialog();            
+            settingsView.ShowDialog();
         }
 
         private void SettingsViewOnClosed(object sender, EventArgs eventArgs)
@@ -349,7 +349,7 @@ namespace Platonus_Tester
             //------------------------
             foreach (var rb in _radioButtonsList)
             {
-                var tb = (TextBlock) rb.Content;
+                var tb = (TextBlock)rb.Content;
                 if (rb.IsChecked != null && rb.IsChecked.Value)
                 {
                     answer.ChosenAnswer = tb.Text;
@@ -388,7 +388,7 @@ namespace Platonus_Tester
                 if (tb.Text == _currentQuestion.CorrectAnswer)
                 {
                     UInterfaceHelper.PaintBackColor(_recList[index], true);
-                    
+
                     //tb.Background = new SolidColorBrush(Const.CorrectColor);
                     //_tbList[index].Background = new SolidColorBrush(Const.CorrectColor);
                 }
@@ -408,7 +408,7 @@ namespace Platonus_Tester
         private void DisplayProgress(int position)
         {
             var count = _settings.EnableLimit ? _settings.QuestionLimitCount : _questionManager.GetCount();
-            count = count > 0 ? count: 1;
+            count = count > 0 ? count : 1;
             var pValue = (double)position / count * 100;
             pValue = pValue > 100 ? 100 : pValue;
             progressBar.Value = pValue;
@@ -431,8 +431,8 @@ namespace Platonus_Tester
                 LoadToLabels(_currentQuestion);
                 DisplayProgress(_questionManager.GetCurrentPosition());
 
-                var remain = !_settings.EnableLimit ? 
-                    _questionManager.GetCount() - _answered.Count : 
+                var remain = !_settings.EnableLimit ?
+                    _questionManager.GetCount() - _answered.Count :
                     _settings.QuestionLimitCount - _answered.Count;
 
                 InformationLabel.Content = $"Осталось вопросов: {remain}";
