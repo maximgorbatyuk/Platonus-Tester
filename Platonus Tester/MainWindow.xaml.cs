@@ -249,6 +249,12 @@ namespace Platonus_Tester
             _sourceController.ProcessSourceFileAsync(_fileName);
             LimitLabel.Content = _settings.EnableLimit ? Const.LimitEnabled : Const.LimitDisabled;
             SwearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
+
+            var errors = _sourceController.GetErrors();
+            if (errors != null)
+            {
+                new ErrorWindow(errors.Select(x => $"Проблема при открытии файла вопросов: {x.Message}").ToList()).ShowDialog();
+            }
         }
 
         /// <summary>
@@ -388,14 +394,10 @@ namespace Platonus_Tester
                 if (tb.Text == _currentQuestion.CorrectAnswer)
                 {
                     UInterfaceHelper.PaintBackColor(_recList[index], true);
-
-                    //tb.Background = new SolidColorBrush(Const.CorrectColor);
-                    //_tbList[index].Background = new SolidColorBrush(Const.CorrectColor);
                 }
                 else if (rb.IsChecked ?? false)
                 {
                     UInterfaceHelper.PaintBackColor(_recList[index], false);
-                    //tb.Background = new SolidColorBrush(Const.IncorrectColor);
                 }
             }
         }
@@ -416,33 +418,33 @@ namespace Platonus_Tester
 
         private void NextButton_Click(object sender, RoutedEventArgs e)
         {
+            CheckQuestion();
+            _currentQuestion = _questionManager.GetNext();
+            LoadToLabels(_currentQuestion);
+            DisplayProgress(_questionManager.GetCurrentPosition());
+
+            var remain = !_settings.EnableLimit ?
+                _questionManager.GetCount() - _answered.Count :
+                _settings.QuestionLimitCount - _answered.Count;
+
+            InformationLabel.Content = $"Осталось вопросов: {remain}";
+
+            if (remain == 1)
+            {
+                NextButton.Content = Const.ShowResult;
+            }
+            foreach (var rb in _radioButtonsList)
+            {
+                rb.IsChecked = false;
+            }
             var cond = _answered.Count == _questionManager.GetFirstListCount() ||
-                       (_answered.Count == _settings.QuestionLimitCount && _settings.EnableLimit == true);
+                     (_answered.Count == _settings.QuestionLimitCount && _settings.EnableLimit == true);
             if (cond)
             {
-                //_settings = SettingsController.Load();
-                //swearLabel.Content = _settings.ShowSwearing ? Const.SwearsEnabled : Const.SwearsDisabled;
                 FinishTesting();
             }
-            else
-            {
-                CheckQuestion();
-                _currentQuestion = _questionManager.GetNext();
-                LoadToLabels(_currentQuestion);
-                DisplayProgress(_questionManager.GetCurrentPosition());
-
-                var remain = !_settings.EnableLimit ?
-                    _questionManager.GetCount() - _answered.Count :
-                    _settings.QuestionLimitCount - _answered.Count;
-
-                InformationLabel.Content = $"Осталось вопросов: {remain}";
-
-                if (remain == 0)
-                {
-                    NextButton.Content = Const.ShowResult;
-                }
-            }
         }
+
 
         private void StartAgainMenuItem_OnClick(object sender, RoutedEventArgs e)
         {
@@ -450,7 +452,6 @@ namespace Platonus_Tester
             UInterfaceHelper.SetText(InformationLabel, "");
             UInterfaceHelper.SetText(serviceTextBox, Const.FileProcessing);
             LoadSettings();
-            // throw new NotImplementedException();
         }
 
         private void LoadSourceMenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -463,14 +464,21 @@ namespace Platonus_Tester
             FinishTesting();
         }
 
-        public void OnSourceLoaded(SourceFile file)
+        public void OnSourceLoaded(object currentDispatcher)
         {
-            _sourcefile = file;
+            CurrentDispatcherFile sourcefile = (CurrentDispatcherFile)currentDispatcher;
+            sourcefile.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new RunProcessDelegate(RunProcess), sourcefile.SourceFile);
+        }
+        public delegate void RunProcessDelegate(SourceFile sourcefile);
+
+        public void RunProcess(object sourcefile)
+        {
+            // TODO Maxim: here we set a value from another thread. This logic should be changed
+            _sourcefile = (SourceFile)sourcefile;
             if (_sourcefile?.SourceText == null)
             {
                 serviceTextBox.Text = Const.InviteToLoadFile;
                 StartButton.IsEnabled = true;
-                //StartButton.Content = "Поместите файл в окно";
                 return;
             }
             StartButton.Content = Const.StartTesting;

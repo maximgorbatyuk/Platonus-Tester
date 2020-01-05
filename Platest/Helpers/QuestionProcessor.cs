@@ -87,7 +87,7 @@ namespace Platest.Helpers
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
-        private TestQuestion GetQuestion(string text)
+        public TestQuestion GetQuestion(string text)
         {
             try
             {

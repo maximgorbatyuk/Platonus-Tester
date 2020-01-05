@@ -3,11 +3,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Threading;
 using Novacode;
 using Platest.Helpers;
 using Platest.Interfaces;
@@ -27,11 +28,13 @@ namespace Platest.Controllers
     public class SourceController
     {
         private readonly ISourceLoadListener _listener;
-        private string _fileName;
+        private string _fileName;  
+        private readonly List<Exception> _errorList;
 
         public SourceController(ISourceLoadListener listener)
         {
             _listener = listener;
+            _errorList = new List<Exception>(0);
         }
 
         /// <summary>
@@ -46,29 +49,15 @@ namespace Platest.Controllers
         public void ProcessSourceFileAsync(string fileName)
         {
             _fileName = fileName;
-
-            var worker = new BackgroundWorker();
-            worker.DoWork += worker_DoWork;
-            worker.RunWorkerCompleted += worker_RunWorkerCompleted;
-            worker.RunWorkerAsync(fileName);
-
-
-            //_thread = new Thread(StartProcessing);
-            // _thread.Start();
+            var file = GetSourceFile();
+            StartProcessing(file);
         }
 
-        private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private SourceFile GetSourceFile()
         {
-            var result = e.Result as SourceFile;
-            _listener.OnSourceLoaded(result);
-        }
-
-        private void worker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            _fileName = e.Argument as string;
             if (_fileName == null)
             {
-                throw new NullReferenceException("Имя файла равно null");
+                throw new InvalidOperationException("Имя файла равно null");
             }
 
             var extension = Path.GetExtension(_fileName);
@@ -88,7 +77,32 @@ namespace Platest.Controllers
             {
 
             }
-            e.Result = file;
+            return file;
+        }
+        public IEnumerable<Exception> GetErrors()
+        {
+            if (_errorList.Count <= 0) return null;
+            var tmp = _errorList;
+            _errorList.Clear();
+            return tmp;
+        }
+
+        /// <summary>
+        /// Whenever you update your UI elements from a thread other than the main thread, you need to use: Dispatcher.BeginInvoke(new Action(() => {GetGridData(null, 0)})); 
+        /// https://stackoverflow.com/questions/9732709/the-calling-thread-cannot-access-this-object-because-a-different-thread-owns-it
+        /// http://www.vbforums.com/showthread.php?731799-RESOLVED-WPF-Dispatcher-BeginInvoke-parameter-mismatch
+        /// </summary>
+        /// <param name="result"></param>
+        private void StartProcessing(SourceFile result)
+        {
+            var file = new CurrentDispatcherFile()
+            {
+                Dispatcher = Dispatcher.CurrentDispatcher,
+                SourceFile = result
+            };
+
+            Task task = new Task(() => _listener.OnSourceLoaded(file));
+            task.Start();
         }
 
         /// <summary>
@@ -106,7 +120,7 @@ namespace Platest.Controllers
             }
             catch (Exception ex)
             {
-                // MessageBox.Show($"Проблема при открытии файла вопросов: {ex.Message}");
+                _errorList.Add(ex);
             }
             finally
             {
@@ -139,7 +153,7 @@ namespace Platest.Controllers
             }
             catch (Exception ex)
             {
-                // MessageBox.Show($"Возникла ошибка при открытии файла:\n{ex.Message}");
+                _errorList.Add(ex);
             }
             return null;
         }
