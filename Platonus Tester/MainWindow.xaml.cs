@@ -68,7 +68,7 @@ namespace Platonus_Tester
                 RBVariant4,
                 RBVariant5,
             };
-            RbVariant1.IsChecked = false;
+            RbVariant1.IsChecked = true;
             _recList = new List<Rectangle>
             {
                 Rc1,
@@ -252,9 +252,8 @@ namespace Platonus_Tester
 
             var errors = _sourceController.GetErrors();
             if (errors != null)
-
             {
-                new ErrorWindow(errors.ToList()).ShowDialog();
+                new ErrorWindow(errors.Select(x => $"Проблема при открытии файла вопросов: {x.Message}").ToList()).ShowDialog();
             }
         }
 
@@ -468,19 +467,13 @@ namespace Platonus_Tester
         public void OnSourceLoaded(object currentDispatcher)
         {
             CurrentDispatcherFile sourcefile = (CurrentDispatcherFile)currentDispatcher;
-            Dispatcher targetDispatcher = sourcefile.Dispatcher as Dispatcher;
-            if (targetDispatcher == null)
-            {
-                return;
-            }
-
-            targetDispatcher.BeginInvoke(DispatcherPriority.Normal, new RunProcessDelegate(RunProcess), sourcefile.SourceFile);
+            sourcefile.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new RunProcessDelegate(RunProcess), sourcefile.SourceFile);
         }
         public delegate void RunProcessDelegate(SourceFile sourcefile);
 
         public void RunProcess(object sourcefile)
         {
-
+            // TODO Maxim: here we set a value from another thread. This logic should be changed
             _sourcefile = (SourceFile)sourcefile;
             if (_sourcefile?.SourceText == null)
             {

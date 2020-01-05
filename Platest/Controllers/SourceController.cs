@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 
 using System;
-using System.Collections.Generic; 
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -28,15 +28,13 @@ namespace Platest.Controllers
     public class SourceController
     {
         private readonly ISourceLoadListener _listener;
-        private string _fileName;
-        private Thread mainThread;
-
-        private List<string> _errorList;
+        private string _fileName;  
+        private readonly List<Exception> _errorList;
 
         public SourceController(ISourceLoadListener listener)
         {
             _listener = listener;
-            _errorList = new List<string>(0);
+            _errorList = new List<Exception>(0);
         }
 
         /// <summary>
@@ -51,15 +49,15 @@ namespace Platest.Controllers
         public void ProcessSourceFileAsync(string fileName)
         {
             _fileName = fileName;
-            var file = worker_DoWork();
+            var file = GetSourceFile();
             StartProcessing(file);
         }
 
-        private SourceFile worker_DoWork()
+        private SourceFile GetSourceFile()
         {
             if (_fileName == null)
             {
-                throw new NullReferenceException("Имя файла равно null");
+                throw new InvalidOperationException("Имя файла равно null");
             }
 
             var extension = Path.GetExtension(_fileName);
@@ -81,11 +79,11 @@ namespace Platest.Controllers
             }
             return file;
         }
-        public IEnumerable<string> GetErrors()
+        public IEnumerable<Exception> GetErrors()
         {
-            if (_errorList == null || _errorList.Count <= 0) return null;
+            if (_errorList.Count <= 0) return null;
             var tmp = _errorList;
-            _errorList = new List<string>(0);
+            _errorList.Clear();
             return tmp;
         }
 
@@ -97,7 +95,7 @@ namespace Platest.Controllers
         /// <param name="result"></param>
         private void StartProcessing(SourceFile result)
         {
-            CurrentDispatcherFile file = new CurrentDispatcherFile()
+            var file = new CurrentDispatcherFile()
             {
                 Dispatcher = Dispatcher.CurrentDispatcher,
                 SourceFile = result
@@ -122,7 +120,7 @@ namespace Platest.Controllers
             }
             catch (Exception ex)
             {
-                _errorList.Add($"Проблема при открытии файла вопросов: {ex.Message}");
+                _errorList.Add(ex);
             }
             finally
             {
@@ -155,7 +153,7 @@ namespace Platest.Controllers
             }
             catch (Exception ex)
             {
-                _errorList.Add($"Возникла ошибка при открытии файла:\n{ex.Message}");
+                _errorList.Add(ex);
             }
             return null;
         }
