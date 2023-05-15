@@ -471,6 +471,41 @@ namespace Platonus_Tester
         }
         public delegate void RunProcessDelegate(SourceFile sourcefile);
 
+        private void MainWindow1_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.D1: // Нажатие клавиши 1
+                    RbVariant1.IsChecked = true;
+                    e.Handled = true;
+                    break;
+                case Key.D2: // Нажатие клавиши 2
+                    RBVariant2.IsChecked = true;
+                    e.Handled = true;
+                    break;
+                case Key.D3: // Нажатие клавиши 3
+                    RBVariant3.IsChecked = true;
+                    e.Handled = true;
+                    break;
+                case Key.D4: // Нажатие клавиши 4
+                    RBVariant4.IsChecked = true;
+                    e.Handled = true;
+                    break;
+                case Key.D5: // Нажатие клавиши 5
+                    RBVariant5.IsChecked = true;
+                    e.Handled = true;
+                    break;
+                case Key.Space: // Нажатие клавиши Space
+                    CheckButton_Click(sender, e);
+                    e.Handled = true;
+                    break;
+                case Key.Enter: // Нажатие клавиши Enter
+                    NextButton_Click(sender, e);
+                    e.Handled = true;
+                    break;
+            }
+        }
+
         public void RunProcess(object sourcefile)
         {
             // TODO Maxim: here we set a value from another thread. This logic should be changed
