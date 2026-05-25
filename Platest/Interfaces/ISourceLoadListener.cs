@@ -1,6 +1,4 @@
-﻿using Platest.Models;
-
-namespace Platest.Interfaces
+﻿namespace Platest.Interfaces
 {
     public interface ISourceLoadListener
     {

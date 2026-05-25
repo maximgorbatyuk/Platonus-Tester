@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using Novacode;
@@ -110,23 +109,38 @@ namespace Platest.Controllers
         /// </summary>
         private SourceFile GetTxt(string filename)
         {
-            StreamReader reader = null;
             string text = null;
             try
             {
-                reader = new StreamReader(filename, Encoding.Default);
-                text = reader.ReadToEnd();
-                reader.Close();
+                // Читаем текст в UTF-8, при малейшей ошибке будет кидать exception
+                var strictUtf8 = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
+        
+                using (var reader = new StreamReader(filename, strictUtf8))
+                {
+                    text = reader.ReadToEnd();
+                }
+            }
+            catch (DecoderFallbackException)
+            {
+                // Если есть траблы с чтением в UTF-8, переключаемся на windows-1251
+                try
+                {
+                    using (var reader = new StreamReader(filename, Encoding.GetEncoding("windows-1251")))
+                    {
+                        text = reader.ReadToEnd();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _errorList.Add(ex);
+                }
             }
             catch (Exception ex)
             {
+                // Ловим все остальные ошибки (например, файл занят другим процессом)
                 _errorList.Add(ex);
             }
-            finally
-            {
-                reader?.Close();
-                reader?.Dispose();
-            }
+
             return new SourceFile(text, null, Path.GetFileName(filename));
         }
 
