@@ -109,26 +109,25 @@ namespace Platest.Controllers
         /// </summary>
         private SourceFile GetTxt(string filename)
         {
+            StreamReader reader = null;
             string text = null;
             try
             {
                 // Читаем текст в UTF-8, при малейшей ошибке будет кидать exception
                 var strictUtf8 = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
-        
-                using (var reader = new StreamReader(filename, strictUtf8))
-                {
-                    text = reader.ReadToEnd();
-                }
+
+                reader = new StreamReader(filename, strictUtf8);
+                text = reader.ReadToEnd();
             }
             catch (DecoderFallbackException)
             {
                 // Если есть траблы с чтением в UTF-8, переключаемся на windows-1251
+                reader?.Dispose();
+                reader = null;
                 try
                 {
-                    using (var reader = new StreamReader(filename, Encoding.GetEncoding("windows-1251")))
-                    {
-                        text = reader.ReadToEnd();
-                    }
+                    reader = new StreamReader(filename, Encoding.GetEncoding("windows-1251"));
+                    text = reader.ReadToEnd();
                 }
                 catch (Exception ex)
                 {
@@ -139,6 +138,10 @@ namespace Platest.Controllers
             {
                 // Ловим все остальные ошибки (например, файл занят другим процессом)
                 _errorList.Add(ex);
+            }
+            finally
+            {
+                reader?.Dispose();
             }
 
             return new SourceFile(text, null, Path.GetFileName(filename));
