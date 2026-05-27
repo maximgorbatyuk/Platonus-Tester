@@ -6,7 +6,9 @@
         xmlns:local="clr-namespace:Platonus_Tester"
         xmlns:Packaging="clr-namespace:System.IO.Packaging;assembly=PresentationCore" x:Name="MainWindow1" x:Class="Platonus_Tester.MainWindow"
         mc:Ignorable="d"
-        Title="Platonus Tester" Height="521.053" Width="777.632" Icon="Media/icon.ico" Loaded="Window_Loaded" Initialized="MainWindow1_Initialized" WindowStartupLocation="CenterScreen" Background="WhiteSmoke">
+        Title="Platonus Tester" Height="521.053" Width="777.632" Icon="Media/icon.ico" Loaded="Window_Loaded" Initialized="MainWindow1_Initialized" 
+        WindowStartupLocation="CenterScreen" Background="WhiteSmoke"
+        PreviewKeyDown="MainWindow1_PreviewKeyDown">
     <Grid>
 
         <Grid.RowDefinitions>
